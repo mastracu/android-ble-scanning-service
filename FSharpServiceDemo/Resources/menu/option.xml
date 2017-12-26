@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/datawedgeRebuild"
+  android:title="Rebuild Datawedge Profile" />
+  <item android:id="@+id/regionTrackingParameters"
+  android:title="RegionTracking Parameters" />
+</menu>

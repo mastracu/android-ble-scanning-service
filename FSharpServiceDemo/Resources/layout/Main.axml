@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/left_padding"
+    android:paddingEnd="@dimen/left_padding"
+    android:paddingTop="@dimen/top_margin">
+    <TextView
+        android:text="@string/app_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/top_margin" />
+    <RadioGroup
+        android:id="@+id/radioGroupScanningMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/top_margin">
+        <RadioButton
+            android:id="@+id/LowLatencyMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="LowLatency scan" />
+        <RadioButton
+            android:id="@+id/LowPowerMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="LowPower scan" />
+    </RadioGroup>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/start_blescan_service_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:layout_weight="1"
+            android:text="@string/restart_blescan_service_button_text" />
+        <Button
+            android:id="@+id/stop_blescan_service_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:layout_weight="1"
+            android:text="@string/stop_blescan_service_button_text"
+            android:layout_marginBottom="@dimen/top_margin" />
+    </LinearLayout>
+    <CheckBox
+        android:id="@+id/btadd1_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="beacon #1" />
+    <CheckBox
+        android:id="@+id/btadd2_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="beacon #2" />
+    <CheckBox
+        android:id="@+id/btadd3_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="beacon #3"
+        android:layout_marginBottom="@dimen/top_margin" />
+    <TextView
+        android:text="@string/scan_to_replace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/top_margin" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <CheckBox
+            android:id="@+id/region_tracking"
+            android:enabled="true"
+            android:text="Region Tracking"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/right_padding" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/threshold_spinner" />
+    </LinearLayout>
+    <RadioGroup
+        android:id="@+id/radioGroupScanningMode"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/top_margin"
+        android:layout_marginBottom="@dimen/top_margin">
+        <RadioButton
+            android:id="@+id/en_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="English" />
+        <RadioButton
+            android:id="@+id/es_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Spanish" />
+        <RadioButton
+            android:id="@+id/it_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Italian" />
+    </RadioGroup>
+    <Button
+        android:id="@+id/blescan_logging"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="BLESCAN logging" />
+</LinearLayout>

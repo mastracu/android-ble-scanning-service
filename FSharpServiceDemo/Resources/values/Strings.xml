@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="hello">Hello World, Click Me!</string>
+  <string name="app_name">BLEDemo</string>
+  <string name="stop_blescan_service_button_text">Stop Service</string>
+  <string name="restart_blescan_service_button_text">Start Service</string>
+  <string name="mute_blescan_service_button_text">Mute</string>
+  <string name="unmute_blescan_service_button_text">Un-mute</string>
+  <string name="rssi_blescan_service_button_text">RSSI</string>
+  <string name="count_blescan_service_button_text">Count</string>
+  <string name="service_started">The service is started.</string>
+  <string name="app_description">This activity starts a BLE scanning service.</string>
+  <string name="scan_to_replace">Scan new beacon to replace one of the above </string>
+  <string name="notification_text">BLE service is running with parms passed by launching activity</string>
+  <string name="restart_blescan">Restart</string>
+  <string name="stop_service">Stop</string>
+  <string-array name="region_threshold_array">
+    <item>-87</item>
+    <item>-90</item>
+    <item>-93</item>
+    <item>-96</item>
+  </string-array>
+</resources>
