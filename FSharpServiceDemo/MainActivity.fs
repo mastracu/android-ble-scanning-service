@@ -227,11 +227,28 @@ type MainActivity () =
                 let javaFile =  new Java.IO.File (path + filename)
                 do javaFile.SetWritable (true,false) |> ignore
                 do javaFile.SetReadable (true,false) |> ignore
-
-            // item.ItemId = Resource_Id.datawedgeRebuild
             do Asset2DWAutoImport "dwprofile_Bleservice.db" 
             true
         elif item.ItemId = Resources.Id.regionTrackingParameters then
+            let alert = new Dialog(this)
+            let inflater = this.GetSystemService(Context.LayoutInflaterService) :?> LayoutInflater
+            let layout = inflater.Inflate (Resources.Layout.regionTrackingParms, this.FindViewById<ViewGroup>(Resources.Id.layoutDialog) )
+            do alert.SetTitle ("Region Tracking Parms") |> ignore
+            do alert.SetCancelable false |> ignore
+            do alert.SetContentView layout |> ignore
+            let text1 = layout.FindViewById<TextView>(Resources.Id.textView1)
+            let seekBar1 = layout.FindViewById<SeekBar>(Resources.Id.seekBar1)
+            let text2 = layout.FindViewById<TextView>(Resources.Id.textView2)
+            let seekBar2 = layout.FindViewById<SeekBar>(Resources.Id.seekBar2)
+            do seekBar1.ProgressChanged.Add (fun e -> text1.Text <- "Enter Region RSSI Threshold: " + (e.Progress-110).ToString() + " dbm" ) 
+            do seekBar2.ProgressChanged.Add (fun e -> text2.Text <- "Region Exit Timeout: " + e.Progress.ToString() + " secs" )
+            let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButton)
+            do defaultButton.Click.Add (fun dArgs -> seekBar1.Progress <- 20; seekBar2.Progress <- 5)
+            let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButton)
+            do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
+            let applyButton = layout.FindViewById<Button>(Resources.Id.applyButton)
+            do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
+            do alert.Show() |> ignore
             true
         else
             true

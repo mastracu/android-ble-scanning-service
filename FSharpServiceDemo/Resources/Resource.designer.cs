@@ -304,6 +304,9 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b002d
 			public const int actions = 2131427373;
 			
+			// aapt resource value: 0x7f0b0037
+			public const int applyButton = 2131427383;
+			
 			// aapt resource value: 0x7f0b0005
 			public const int async = 2131427333;
 			
@@ -322,6 +325,9 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0014
 			public const int btadd3_filter = 2131427348;
 			
+			// aapt resource value: 0x7f0b0036
+			public const int cancelButton = 2131427382;
+			
 			// aapt resource value: 0x7f0b0020
 			public const int cancel_action = 2131427360;
 			
@@ -331,8 +337,11 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000c
 			public const int clear_log_button = 2131427340;
 			
-			// aapt resource value: 0x7f0b0030
-			public const int datawedgeRebuild = 2131427376;
+			// aapt resource value: 0x7f0b0038
+			public const int datawedgeRebuild = 2131427384;
+			
+			// aapt resource value: 0x7f0b0035
+			public const int defaultButton = 2131427381;
 			
 			// aapt resource value: 0x7f0b0018
 			public const int en_language = 2131427352;
@@ -360,6 +369,9 @@ namespace FSharpServiceDemo
 			
 			// aapt resource value: 0x7f0b0008
 			public const int italic = 2131427336;
+			
+			// aapt resource value: 0x7f0b0030
+			public const int layoutDialog = 2131427376;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int line1 = 2131427328;
@@ -391,8 +403,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b0031
-			public const int regionTrackingParameters = 2131427377;
+			// aapt resource value: 0x7f0b0039
+			public const int regionTrackingParameters = 2131427385;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
@@ -402,6 +414,12 @@ namespace FSharpServiceDemo
 			
 			// aapt resource value: 0x7f0b0026
 			public const int right_side = 2131427366;
+			
+			// aapt resource value: 0x7f0b0032
+			public const int seekBar1 = 2131427378;
+			
+			// aapt resource value: 0x7f0b0034
+			public const int seekBar2 = 2131427380;
 			
 			// aapt resource value: 0x7f0b0010
 			public const int start_blescan_service_button = 2131427344;
@@ -420,6 +438,12 @@ namespace FSharpServiceDemo
 			
 			// aapt resource value: 0x7f0b0003
 			public const int text2 = 2131427331;
+			
+			// aapt resource value: 0x7f0b0031
+			public const int textView1 = 2131427377;
+			
+			// aapt resource value: 0x7f0b0033
+			public const int textView2 = 2131427379;
 			
 			// aapt resource value: 0x7f0b0017
 			public const int threshold_spinner = 2131427351;
@@ -512,6 +536,9 @@ namespace FSharpServiceDemo
 			
 			// aapt resource value: 0x7f040010
 			public const int notification_template_part_time = 2130968592;
+			
+			// aapt resource value: 0x7f040011
+			public const int regionTrackingParms = 2130968593;
 			
 			static Layout()
 			{
