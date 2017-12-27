@@ -15,7 +15,8 @@ open Android.Support.V4
 type Resources = FSharpServiceDemo.Resource
 
 // TODO: best practice for multi-language resources/apps in Android
-// TODO: work-around Nougat 30 minutes BLE scanning timeout
+// TODO: work-around Nougat 30 minutes BLE scanning 
+// TODO: support of MarshMallow and Nougat - currently only supports Lollipop
 
 // For future use - currently not used
 // type BeaconCount = { addr: string; count:int}
@@ -23,7 +24,7 @@ type Resources = FSharpServiceDemo.Resource
 type BeaconObservation = 
    {ObservationTimestamp:int64; BeaconAddress:string; SignalStrength: int; DeviceName: string} 
    override x.ToString() = 
-      helper.epoch2timestamp x.ObservationTimestamp + " " + x.BeaconAddress  + "  " + x.DeviceName + " @ " + x.SignalStrength.ToString()
+      helper.epoch2timestamp x.ObservationTimestamp + "    " + x.BeaconAddress  + "    " + x.SignalStrength.ToString()
    member x.SendBroadcast (cont:Context) action extraName =
        let int = new Intent ()
        do  int.SetAction action |> ignore
@@ -137,7 +138,7 @@ type BleScanningService() =
         else
             () 
 
-   member this.pararametersReport () =
+   member this.LongPararametersReport () =
       match bleScanMode with 
       | LE.ScanMode.LowLatency -> "LowLatency scanning\n" 
       | LE.ScanMode.LowPower -> "LowPower scanning\n" 
@@ -147,10 +148,18 @@ type BleScanningService() =
          "Region mode ON : threshold " + rssiThreshold.ToString() + "\nRegion Timeout : " + (regionTimeoutTimer.Interval).ToString() + " msec" +
             match regionAddress with
             | None -> "\nOut of region\n"
-            | Some reg -> "\nRegion " +  reg + "\n"
+            | Some reg -> "\nRegion " +  reg
       else
          "Region mode OFF\n" + if isRssiReport then "RSSI " else "COUNT " 
           + "report mode Freq 10 secs" 
+
+   member this.ShortPararametersReport () =
+      if regionTrackingMode then
+            match regionAddress with
+            | None -> "Out of region"
+            | Some reg -> "Region " +  reg + "\n"
+      else
+         if isRssiReport then "RSSI " else "COUNT " + "report mode Freq 10 secs" 
 
    member this.notificationBuilder = 
    // TODO: read and understand https://developer.android.com/training/notify-user/expanded.html
@@ -158,10 +167,10 @@ type BleScanningService() =
       (new App.NotificationCompat.Builder(this))
                             .SetStyle(
                                (new App.NotificationCompat.BigTextStyle())
-                                  .BigText(this.pararametersReport ())
+                                  .BigText(this.LongPararametersReport ())
                              ) 
                             .SetContentTitle(this.GetString(Resources.String.app_name))
-                            .SetContentText(this.GetString(Resources.String.notification_text))
+                            .SetContentText(this.ShortPararametersReport ())
                             .SetSmallIcon(Resources.Drawable.ic_stat_tap_and_play)
                             .SetContentIntent(this.BuildIntentToShowMainActivity())
                             .SetOngoing(true)
@@ -268,10 +277,10 @@ type BleScanningService() =
                                    string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 2] + " " +
                                    string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
          else
-            do textToSpeech.Speak ((ObservationsCountInPeriod.ToString() + 
-                                    if    localeForSpeech = Java.Util.Locale.Italy then " rilevazioni da " +  beaconCountInPeriod.ToString() + "indirizzi"
-                                    elif  localeForSpeech = Java.Util.Locale.Uk    then " advertisements from " +  beaconCountInPeriod.ToString() + "beacons"
-                                    else " señales desde " + beaconCountInPeriod.ToString() + "balizas")
+            do textToSpeech.Speak ((ObservationsCountInPeriod.ToString() +
+                                       if    localeForSpeech = Java.Util.Locale.Italy then " rilevazioni da " +  beaconCountInPeriod.ToString() + "indirizzi"
+                                       elif  localeForSpeech = Java.Util.Locale.Uk    then " advertisements from " +  beaconCountInPeriod.ToString() + "beacons"
+                                       else " señales desde " + beaconCountInPeriod.ToString() + "balizas")
                  , QueueMode.Add, param, "UniqueID") |> ignore
       else
          ()
@@ -334,9 +343,7 @@ type BleScanningService() =
                do regionTrackingMode <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_REGIONTRACKING, false)
                if regionTrackingMode then
                    do rssiThreshold <- intent.GetIntExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, -90)
-                   do regionTimeoutTimer.Enabled <- true
                    do regionTimeoutTimer.Interval <- float (intent.GetIntExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, 5) * 1000)
-                   do regionTimeoutTimer.Enabled <- false
                else
                    do updateTimer.Start()
 
