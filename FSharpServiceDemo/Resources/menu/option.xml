@@ -8,6 +8,9 @@
   <item android:id="@+id/enableRXLogger"
         android:title="Enable RXLogger"
         android:showAsAction="never" />
+  <item android:id="@+id/BLECapabilities"
+        android:title="BLE Radio capabilities"
+        android:showAsAction="never" />
   <item android:id="@+id/regionTrackingParameters"
         android:icon="@drawable/ic_action_perm_data_setting"
         android:title="RegionTracking Parameters" 

@@ -15,26 +15,16 @@ open Android.Support.V4
 type Resources = FSharpServiceDemo.Resource
 
 // TODO: apply best practice for multi-language resources/apps in Android
-// TODO: support of MarshMallow and Nougat - currently only supports Lollipop
 // TODO: work-around Nougat 30 minutes BLE scanning 
 
 // For future use - currently not used
 // type BeaconCount = { addr: string; count:int}
 
-type BeaconObservation = 
-   {ObservationTimestamp:int64; BeaconAddress:string; SignalStrength: int; DeviceName: string} 
-   override x.ToString() = 
-      helper.epoch2timestamp x.ObservationTimestamp + "    " + x.BeaconAddress  + "    " + x.SignalStrength.ToString()
-   member x.SendBroadcast (cont:Context) action extraName =
-       let int = new Intent ()
-       do  int.SetAction action |> ignore
-       do  int.PutExtra (extraName, x.ToString()) |> ignore
-       do  cont.SendBroadcast int
 
-type UMScanCallback (e: Event<BeaconObservation>) =
+type UMScanCallback (e: Event<BLELog.BeaconObservation>) =
    inherit LE.ScanCallback ()
    let reportResult (sResult:LE.ScanResult) = 
-      let newObservation:BeaconObservation = 
+      let newObservation:BLELog.BeaconObservation = 
          { ObservationTimestamp = Java.Lang.JavaSystem.CurrentTimeMillis(); BeaconAddress = sResult.Device.Address 
            SignalStrength =  sResult.Rssi; DeviceName = sResult.ScanRecord.DeviceName }
       e.Trigger newObservation
@@ -76,7 +66,7 @@ type BleScanningService() =
    let mutable textToSpeech = Unchecked.defaultof<TextToSpeech>
    let mutable regionAddress = Unchecked.defaultof<Option<string>>
 
-   let eventObservation = new Event<BeaconObservation> ()
+   let eventObservation = new Event<BLELog.BeaconObservation> ()
    let mBLuetoothLeCallback = new UMScanCallback(eventObservation)
    
 
@@ -89,7 +79,7 @@ type BleScanningService() =
                ()
            end   
 
-   member this.obsAction bo = 
+   member this.obsAction (bo:BLELog.BeaconObservation) = 
         if (Seq.length beacon2Observe = 0 || (Seq.exists (fun e -> e = bo.BeaconAddress) beacon2Observe) )  then
             if regionTrackingMode then 
                 let enterRegionifAboveThreshold () =
@@ -134,7 +124,7 @@ type BleScanningService() =
                     do beaconCountInPeriod <- beaconCountInPeriod + 1
                 else
                     ()
-            do bo.SendBroadcast this "com.zebra.newBLEObservation" "com.zebra.newBLEObservation.ToString"
+            do bo.SendBroadcast this "com.zebra.newBLEObservation"
         else
             () 
 
@@ -182,6 +172,15 @@ type BleScanningService() =
                                    .PutExtra(helper.SERVICE_STARTED_KEY, true);
 
       PendingIntent.GetActivity(this, 0, notificationIntent, PendingIntentFlags.UpdateCurrent);
+
+   member this.BuildStopServiceAction =
+      let stopServiceIntent = (new Intent(this, this.GetType()))
+                                  .SetAction(helper.ACTION_STOP_SERVICE)
+      let stopServicePendingIntent = PendingIntent.GetService(this, 0, stopServiceIntent, PendingIntentFlags.UpdateCurrent)
+      let builder = new App.NotificationCompat.Action.Builder(Android.Resource.Drawable.IcMediaPause,
+                                                        this.GetText(Resources.String.stop_service),
+                                                        stopServicePendingIntent)
+      builder.Build()
 
    member this.BuildMuteBlescanAction =
       let muteIntent = (new Intent(this, this.GetType()))
@@ -231,14 +230,6 @@ type BleScanningService() =
        use notificationManager = this.GetSystemService(Context.NotificationService) :?> NotificationManager 
        do notificationManager.Notify (helper.SERVICE_RUNNING_NOTIFICATION_ID,notification)      
       
-   member this.BuildStopServiceAction =
-      let stopServiceIntent = (new Intent(this, this.GetType()))
-                                  .SetAction(helper.ACTION_STOP_SERVICE)
-      let stopServicePendingIntent = PendingIntent.GetService(this, 0, stopServiceIntent, PendingIntentFlags.UpdateCurrent)
-      let builder = new App.NotificationCompat.Action.Builder(Android.Resource.Drawable.IcMediaPause,
-                                                        this.GetText(Resources.String.stop_service),
-                                                        stopServicePendingIntent)
-      builder.Build()
 
    member this.RegisterForegroundService (showRssiCountSwitch:Boolean) =
       notificationAction1 <- this.BuildStopServiceAction

@@ -283,6 +283,9 @@ namespace FSharpServiceDemo
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f0b003a
+			public const int BLECapabilities = 2131427386;
+			
 			// aapt resource value: 0x7f0b000e
 			public const int LowLatencyMode = 2131427342;
 			
@@ -412,8 +415,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b003a
-			public const int regionTrackingParameters = 2131427386;
+			// aapt resource value: 0x7f0b003b
+			public const int regionTrackingParameters = 2131427387;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;

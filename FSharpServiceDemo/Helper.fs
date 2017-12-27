@@ -3,10 +3,11 @@ module helper
 
 open System
 
+
 let epoch2timestamp (millisec:int64) = 
     let startTime = new DateTime (1970,1,1)
     let time = TimeSpan.FromMilliseconds (float millisec) 
-    (startTime.Add time).ToLocalTime().ToLongTimeString()   
+    ((startTime.Add time).ToLocalTime()).ToString("hh:mm:ss.fff")
 
 let isValidBeaconAddress (candidateBeaconAddr:string) =
     if candidateBeaconAddr.Length <> 17 then

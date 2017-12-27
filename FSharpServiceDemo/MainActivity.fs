@@ -13,11 +13,17 @@ open Android.Preferences
 
 type Resources = FSharpServiceDemo.Resource
 
-//TODO: Turn menu options entry (regiontracking parms as a minimum) into menu icons 
-//TODO: Ask for confirmation when new dw profile is applied - AlertDialog
-//TODO: Analysis of captured logging - assumes stationary caoture - delta RSSI among maximum RSSI of each address - longest gaps for each address
+//TODO: support of MarshMallow and Nougat - currently only supports Lollipop (new run-time permission model see https://gimbal.com/marshmallow-permissions/)
+//https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
+//https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
+//TODO: Ask for confirmation before new dw profile is applied - AlertDialog
+//TODO: Analysis of captured logging - assumes stationary capture - for each address seen show max RSSI, longest gap, beacon count. Delta across max RSSIs. Service will need to send observation object as part of intent.
 //TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
 //TODO: option menu entry to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
+//TODO: option menu entry to check whether BLE adapter supports multi-advertisement (hence it can act as a beacon), batchscanning and ohters. 
+//TODO: option menu entry to send notification of location over Internet (whatsapp ?)
+// https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
+
 
 // Launcher icon generator: http://romannurik.github.io/AndroidAssetStudio/
 

@@ -12,18 +12,32 @@ open Android.Util
 
 type Resources = FSharpServiceDemo.Resource
 
-type ObservationReceiver (extraName:string, e:Event<string>) = 
-   inherit BroadcastReceiver()               
-   override this.OnReceive (context, intent) = 
-       Log.Debug ("OnReceive", "before Trigger") |> ignore
-       do intent.GetStringExtra extraName |> e.Trigger
+type BeaconObservation = 
+   {ObservationTimestamp:int64; BeaconAddress:string; SignalStrength: int; DeviceName: string} 
+   override x.ToString() = 
+      helper.epoch2timestamp x.ObservationTimestamp + "    " + x.BeaconAddress  + "    " + x.SignalStrength.ToString()
+   member x.SendBroadcast (cont:Context) action =
+       let int = new Intent ()
+       do  int.SetAction action |> ignore
+       do  int.PutExtra (action + ".ObservationTimestamp", x.ObservationTimestamp) |> ignore
+       do  int.PutExtra (action + ".BeaconAddress", x.BeaconAddress) |> ignore
+       do  int.PutExtra (action + ".SignalStrength", x.SignalStrength) |> ignore
+       do  cont.SendBroadcast int
 
+type ObservationReceiver (extraBase:string, e:Event<BeaconObservation>) = 
+   inherit BroadcastReceiver()               
+   override this.OnReceive (context, intent) =
+       { ObservationTimestamp = intent.GetLongExtra (extraBase + ".ObservationTimestamp", 0L) 
+         BeaconAddress = intent.GetStringExtra (extraBase + ".BeaconAddress")
+         SignalStrength = intent.GetIntExtra (extraBase + ".SignalStrength", 0)
+         DeviceName = "" } |> e.Trigger
+        
 // https://developer.xamarin.com/guides/android/advanced_topics/working_with_androidmanifest.xml/
 [<Activity (Label = "BLEScanLog")>]
 type BLELogActivity () =
     inherit Activity ()
           
-    let bleNotification = new Event<string> ()
+    let bleNotification = new Event<BeaconObservation> ()
 
     let mutable listViewStatusLog:ListView = null
     let mutable logAdapter:ArrayAdapter = null
@@ -49,7 +63,7 @@ type BLELogActivity () =
 
         use filter = new IntentFilter("com.zebra.newBLEObservation")
         do filter.AddCategory "android.intent.category.DEFAULT"
-        let obsRec = new ObservationReceiver("com.zebra.newBLEObservation.ToString", bleNotification)
+        let obsRec = new ObservationReceiver("com.zebra.newBLEObservation", bleNotification)
         do this.RegisterReceiver (obsRec, filter) |> ignore
 
         do Event.add  (fun newObservation -> 
