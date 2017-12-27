@@ -1,6 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/datawedgeRebuild"
-  android:title="Rebuild Datawedge Profile" />
+        android:title="Rebuild Datawedge Profile" 
+        android:showAsAction="never" />
+  <item android:id="@+id/printBarcodes"
+        android:title="Print Beacon Barcode labels"
+        android:showAsAction="never" />
+  <item android:id="@+id/enableRXLogger"
+        android:title="Enable RXLogger"
+        android:showAsAction="never" />
   <item android:id="@+id/regionTrackingParameters"
-  android:title="RegionTracking Parameters" />
+        android:icon="@drawable/ic_action_perm_data_setting"
+        android:title="RegionTracking Parameters" 
+        android:showAsAction="ifRoom" />
 </menu>

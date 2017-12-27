@@ -14,9 +14,9 @@ open Android.Support.V4
 
 type Resources = FSharpServiceDemo.Resource
 
-// TODO: best practice for multi-language resources/apps in Android
-// TODO: work-around Nougat 30 minutes BLE scanning 
+// TODO: apply best practice for multi-language resources/apps in Android
 // TODO: support of MarshMallow and Nougat - currently only supports Lollipop
+// TODO: work-around Nougat 30 minutes BLE scanning 
 
 // For future use - currently not used
 // type BeaconCount = { addr: string; count:int}
@@ -147,7 +147,7 @@ type BleScanningService() =
       if regionTrackingMode then
          "Region mode ON : threshold " + rssiThreshold.ToString() + "\nRegion Timeout : " + (regionTimeoutTimer.Interval).ToString() + " msec" +
             match regionAddress with
-            | None -> "\nOut of region\n"
+            | None -> "\nOut of region"
             | Some reg -> "\nRegion " +  reg
       else
          "Region mode OFF\n" + if isRssiReport then "RSSI " else "COUNT " 
@@ -157,7 +157,7 @@ type BleScanningService() =
       if regionTrackingMode then
             match regionAddress with
             | None -> "Out of region"
-            | Some reg -> "Region " +  reg + "\n"
+            | Some reg -> "Region " +  reg
       else
          if isRssiReport then "RSSI " else "COUNT " + "report mode Freq 10 secs" 
 

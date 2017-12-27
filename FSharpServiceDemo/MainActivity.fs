@@ -13,10 +13,14 @@ open Android.Preferences
 
 type Resources = FSharpServiceDemo.Resource
 
-//TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
-//TODO: new UI button to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
-//TODO: Turn menu options entry into menu icons 
+//TODO: Turn menu options entry (regiontracking parms as a minimum) into menu icons 
 //TODO: Ask for confirmation when new dw profile is applied - AlertDialog
+//TODO: Analysis of captured logging - assumes stationary caoture - delta RSSI among maximum RSSI of each address - longest gaps for each address
+//TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
+//TODO: option menu entry to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
+
+// Launcher icon generator: http://romannurik.github.io/AndroidAssetStudio/
+
 
 type barcodeReceiver (dwIntentAction: String, barcodeProcessor: String -> String -> String -> Unit) = 
    inherit BroadcastReceiver()               
@@ -36,7 +40,7 @@ type barcodeReceiver (dwIntentAction: String, barcodeProcessor: String -> String
       | false ->
          ()
 
-[<Activity (Label = "BLEScanServiceDemo", MainLauncher = true, Icon = "@mipmap/ic_launcher")>]
+[<Activity (Label = "BLEScan", MainLauncher = true, Icon = "@mipmap/ic_launcher")>]
 [<IntentFilter [| "BLEService.action.MAIN_ACTIVITY" |]>]
 type MainActivity () =
     inherit Activity ()
