@@ -286,32 +286,32 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000f
 			public const int LowPowerMode = 2131427343;
 			
-			// aapt resource value: 0x7f0b001f
-			public const int action0 = 2131427359;
+			// aapt resource value: 0x7f0b001e
+			public const int action0 = 2131427358;
+			
+			// aapt resource value: 0x7f0b001b
+			public const int action_container = 2131427355;
+			
+			// aapt resource value: 0x7f0b0022
+			public const int action_divider = 2131427362;
 			
 			// aapt resource value: 0x7f0b001c
-			public const int action_container = 2131427356;
-			
-			// aapt resource value: 0x7f0b0023
-			public const int action_divider = 2131427363;
+			public const int action_image = 2131427356;
 			
 			// aapt resource value: 0x7f0b001d
-			public const int action_image = 2131427357;
+			public const int action_text = 2131427357;
 			
-			// aapt resource value: 0x7f0b001e
-			public const int action_text = 2131427358;
+			// aapt resource value: 0x7f0b002c
+			public const int actions = 2131427372;
 			
-			// aapt resource value: 0x7f0b002d
-			public const int actions = 2131427373;
-			
-			// aapt resource value: 0x7f0b0037
-			public const int applyButton = 2131427383;
+			// aapt resource value: 0x7f0b0036
+			public const int applyButton = 2131427382;
 			
 			// aapt resource value: 0x7f0b0005
 			public const int async = 2131427333;
 			
-			// aapt resource value: 0x7f0b001b
-			public const int blescan_logging = 2131427355;
+			// aapt resource value: 0x7f0b001a
+			public const int blescan_logging = 2131427354;
 			
 			// aapt resource value: 0x7f0b0006
 			public const int blocking = 2131427334;
@@ -325,53 +325,53 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0014
 			public const int btadd3_filter = 2131427348;
 			
-			// aapt resource value: 0x7f0b0036
-			public const int cancelButton = 2131427382;
+			// aapt resource value: 0x7f0b0035
+			public const int cancelButton = 2131427381;
 			
-			// aapt resource value: 0x7f0b0020
-			public const int cancel_action = 2131427360;
+			// aapt resource value: 0x7f0b001f
+			public const int cancel_action = 2131427359;
 			
-			// aapt resource value: 0x7f0b0028
-			public const int chronometer = 2131427368;
+			// aapt resource value: 0x7f0b0027
+			public const int chronometer = 2131427367;
 			
 			// aapt resource value: 0x7f0b000c
 			public const int clear_log_button = 2131427340;
 			
-			// aapt resource value: 0x7f0b0038
-			public const int datawedgeRebuild = 2131427384;
+			// aapt resource value: 0x7f0b0037
+			public const int datawedgeRebuild = 2131427383;
 			
-			// aapt resource value: 0x7f0b0035
-			public const int defaultButton = 2131427381;
+			// aapt resource value: 0x7f0b0034
+			public const int defaultButton = 2131427380;
+			
+			// aapt resource value: 0x7f0b0017
+			public const int en_language = 2131427351;
+			
+			// aapt resource value: 0x7f0b002e
+			public const int end_padder = 2131427374;
 			
 			// aapt resource value: 0x7f0b0018
-			public const int en_language = 2131427352;
-			
-			// aapt resource value: 0x7f0b002f
-			public const int end_padder = 2131427375;
-			
-			// aapt resource value: 0x7f0b0019
-			public const int es_language = 2131427353;
+			public const int es_language = 2131427352;
 			
 			// aapt resource value: 0x7f0b0007
 			public const int forever = 2131427335;
 			
-			// aapt resource value: 0x7f0b002a
-			public const int icon = 2131427370;
-			
-			// aapt resource value: 0x7f0b002e
-			public const int icon_group = 2131427374;
-			
 			// aapt resource value: 0x7f0b0029
-			public const int info = 2131427369;
+			public const int icon = 2131427369;
 			
-			// aapt resource value: 0x7f0b001a
-			public const int it_language = 2131427354;
+			// aapt resource value: 0x7f0b002d
+			public const int icon_group = 2131427373;
+			
+			// aapt resource value: 0x7f0b0028
+			public const int info = 2131427368;
+			
+			// aapt resource value: 0x7f0b0019
+			public const int it_language = 2131427353;
 			
 			// aapt resource value: 0x7f0b0008
 			public const int italic = 2131427336;
 			
-			// aapt resource value: 0x7f0b0030
-			public const int layoutDialog = 2131427376;
+			// aapt resource value: 0x7f0b002f
+			public const int layoutDialog = 2131427375;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int line1 = 2131427328;
@@ -385,47 +385,47 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000a
 			public const int listView1 = 2131427338;
 			
-			// aapt resource value: 0x7f0b0022
-			public const int media_actions = 2131427362;
+			// aapt resource value: 0x7f0b0021
+			public const int media_actions = 2131427361;
 			
 			// aapt resource value: 0x7f0b0009
 			public const int normal = 2131427337;
 			
-			// aapt resource value: 0x7f0b002c
-			public const int notification_background = 2131427372;
-			
-			// aapt resource value: 0x7f0b0025
-			public const int notification_main_column = 2131427365;
+			// aapt resource value: 0x7f0b002b
+			public const int notification_background = 2131427371;
 			
 			// aapt resource value: 0x7f0b0024
-			public const int notification_main_column_container = 2131427364;
+			public const int notification_main_column = 2131427364;
+			
+			// aapt resource value: 0x7f0b0023
+			public const int notification_main_column_container = 2131427363;
 			
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b0039
-			public const int regionTrackingParameters = 2131427385;
+			// aapt resource value: 0x7f0b0038
+			public const int regionTrackingParameters = 2131427384;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
 			
-			// aapt resource value: 0x7f0b002b
-			public const int right_icon = 2131427371;
+			// aapt resource value: 0x7f0b002a
+			public const int right_icon = 2131427370;
 			
-			// aapt resource value: 0x7f0b0026
-			public const int right_side = 2131427366;
+			// aapt resource value: 0x7f0b0025
+			public const int right_side = 2131427365;
 			
-			// aapt resource value: 0x7f0b0032
-			public const int seekBar1 = 2131427378;
+			// aapt resource value: 0x7f0b0031
+			public const int seekBar1 = 2131427377;
 			
-			// aapt resource value: 0x7f0b0034
-			public const int seekBar2 = 2131427380;
+			// aapt resource value: 0x7f0b0033
+			public const int seekBar2 = 2131427379;
 			
 			// aapt resource value: 0x7f0b0010
 			public const int start_blescan_service_button = 2131427344;
 			
-			// aapt resource value: 0x7f0b0021
-			public const int status_bar_latest_event_content = 2131427361;
+			// aapt resource value: 0x7f0b0020
+			public const int status_bar_latest_event_content = 2131427360;
 			
 			// aapt resource value: 0x7f0b0011
 			public const int stop_blescan_service_button = 2131427345;
@@ -439,17 +439,14 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0003
 			public const int text2 = 2131427331;
 			
-			// aapt resource value: 0x7f0b0031
-			public const int textView1 = 2131427377;
+			// aapt resource value: 0x7f0b0030
+			public const int textView1 = 2131427376;
 			
-			// aapt resource value: 0x7f0b0033
-			public const int textView2 = 2131427379;
+			// aapt resource value: 0x7f0b0032
+			public const int textView2 = 2131427378;
 			
-			// aapt resource value: 0x7f0b0017
-			public const int threshold_spinner = 2131427351;
-			
-			// aapt resource value: 0x7f0b0027
-			public const int time = 2131427367;
+			// aapt resource value: 0x7f0b0026
+			public const int time = 2131427366;
 			
 			// aapt resource value: 0x7f0b0004
 			public const int title = 2131427332;

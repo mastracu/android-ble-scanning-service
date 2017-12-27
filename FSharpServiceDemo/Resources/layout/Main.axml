@@ -83,14 +83,10 @@
         <CheckBox
             android:id="@+id/region_tracking"
             android:enabled="true"
-            android:text="Region Tracking"
+            android:text="Region Tracking (-90 dbm, 5 secs)"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/right_padding" />
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/threshold_spinner" />
     </LinearLayout>
     <RadioGroup
         android:id="@+id/radioGroupScanningMode"

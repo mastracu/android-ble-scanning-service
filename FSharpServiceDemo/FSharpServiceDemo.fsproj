@@ -19,7 +19,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
     <Name>FSharpServiceDemo</Name>
-    <SelectedDevice>Zebra Technologies TC8000</SelectedDevice>
+    <SelectedDevice>Android_ARMv7a</SelectedDevice>
     <DefaultDevice>Android_ARMv7a</DefaultDevice>
     <AndroidDesignerPreferredDevice>3.7in WVGA (Nexus One)</AndroidDesignerPreferredDevice>
     <NuGetPackageImportStamp>

@@ -144,13 +144,13 @@ type BleScanningService() =
       | _ -> "Unknown scanning mode " 
       +
       if regionTrackingMode then
-         "Region mode ON : threshold " + rssiThreshold.ToString() + 
+         "Region mode ON : threshold " + rssiThreshold.ToString() + "\nRegion Timeout : " + (regionTimeoutTimer.Interval).ToString() + " msec" +
             match regionAddress with
-            | None -> "\nOut of region"
-            | Some reg -> "\nRegion " +  reg
+            | None -> "\nOut of region\n"
+            | Some reg -> "\nRegion " +  reg + "\n"
       else
          "Region mode OFF\n" + if isRssiReport then "RSSI " else "COUNT " 
-          + "report mode Freq 10 secs"
+          + "report mode Freq 10 secs" 
 
    member this.notificationBuilder = 
    // TODO: read and understand https://developer.android.com/training/notify-user/expanded.html
@@ -333,7 +333,10 @@ type BleScanningService() =
                                     | _ -> LE.ScanMode.LowPower
                do regionTrackingMode <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_REGIONTRACKING, false)
                if regionTrackingMode then
-                   do rssiThreshold <- intent.GetIntExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, -95)
+                   do rssiThreshold <- intent.GetIntExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, -90)
+                   do regionTimeoutTimer.Enabled <- true
+                   do regionTimeoutTimer.Interval <- float (intent.GetIntExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, 5) * 1000)
+                   do regionTimeoutTimer.Enabled <- false
                else
                    do updateTimer.Start()
 

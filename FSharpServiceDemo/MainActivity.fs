@@ -15,9 +15,8 @@ type Resources = FSharpServiceDemo.Resource
 
 //TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
 //TODO: new UI button to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
-//TODO: Add stay-in-region min threshold beside enter-region min threshold - not sure if needed
-//TODO: Add configurable region timeout (SeekBar control https://developer.xamarin.com/recipes/android/controls/seekbar/) - seen fake exit region events when low power mode is set - may need longer region timeouts in some circumstances. 
-//TODO: Move region tracking parameters to option menu
+//TODO: Turn menu options entry into menu icons 
+//TODO: Ask for confirmation when new dw profile is applied - AlertDialog
 
 type barcodeReceiver (dwIntentAction: String, barcodeProcessor: String -> String -> String -> Unit) = 
    inherit BroadcastReceiver()               
@@ -44,7 +43,11 @@ type MainActivity () =
 
     let mutable beaconcbArray = Unchecked.defaultof<CheckBox []>
     let mutable regionTrackingcb = Unchecked.defaultof<CheckBox>
-    let mutable regionThresholdSpinner = Unchecked.defaultof<Spinner>
+    let mutable regionThreshold = Unchecked.defaultof<int>
+    let mutable regionTimeout = Unchecked.defaultof<int>
+
+    let updateTextregionTrackingcb () =  
+       regionTrackingcb.Text <- "RegionTracking (" + regionThreshold.ToString() + " dbm, " + regionTimeout.ToString() + " secs)" 
 
     member this.showBarcodeToast (text:string) = 
        this.RunOnUiThread( fun() -> 
@@ -144,13 +147,9 @@ type MainActivity () =
            | "LOWLATENCY" -> lowlatencyrbScanMode.Checked <- true
            | _ -> ()
 
-// https://developer.android.com/guide/topics/ui/controls/spinner.html
-        do regionThresholdSpinner <- this.FindViewById<Spinner>(Resources.Id.threshold_spinner)
-        let arrayAdapterThreshold = ArrayAdapter.CreateFromResource (this, Resources.Array.region_threshold_array, Android.Resource.Layout.SimpleSpinnerItem)
-        do arrayAdapterThreshold.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem)
-        do regionThresholdSpinner.Adapter <- arrayAdapterThreshold
-
-        do regionThresholdSpinner.SetSelection (prefs.GetInt ("threshold_value_position", 0))
+        do regionThreshold <- prefs.GetInt ("threshold_value", -90)
+        do regionTimeout <- prefs.GetInt ("region_timeout", 5)
+        do updateTextregionTrackingcb ()
 
         startServiceButton.Click.Add (fun args -> 
            let selectedBeacons = [ for cb in beaconcbArray do if cb.Checked then yield cb.Text ]
@@ -164,8 +163,9 @@ type MainActivity () =
                    startServiceIntent.PutStringArrayListExtra (helper.EXTRA_SERVICE_FILTER, List.toArray selectedBeacons ) |> ignore
                    startServiceIntent.PutExtra (helper.EXTRA_SERVICE_REGIONTRACKING, regionTrackingcb.Checked) |> ignore
                    if regionTrackingcb.Checked then
-                       startServiceIntent.PutExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, 
-                          (regionThresholdSpinner.GetItemAtPosition regionThresholdSpinner.SelectedItemPosition).ToString() |> int) |> ignore
+                       startServiceIntent.PutExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, regionThreshold) |> ignore 
+                       startServiceIntent.PutExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, regionTimeout) |> ignore 
+//                          (regionThresholdSpinner.GetItemAtPosition regionThresholdSpinner.SelectedItemPosition).ToString() |> int) |> ignore
                    else
                        ()
                    this.StartService (startServiceIntent) |> ignore
@@ -189,7 +189,7 @@ type MainActivity () =
 
     override this.OnPause () =
 
-        do base.OnDestroy()
+        do base.OnPause()
         let prefs = PreferenceManager.GetDefaultSharedPreferences this
         let editor = prefs.Edit ()
         do editor.PutString ("btadd1_filter", beaconcbArray.[0].Text) |> ignore
@@ -200,9 +200,9 @@ type MainActivity () =
         do editor.PutBoolean ("btadd3_selected", beaconcbArray.[2].Checked) |> ignore
         do editor.PutString ("selected_language", this.selectedLanguage()) |> ignore
         do editor.PutString ("selected_scanmode", this.selectedScanMode()) |> ignore
-        // 18 Dec UM
         do editor.PutBoolean ("region_tracking", regionTrackingcb.Checked ) |> ignore
-        do editor.PutInt ("threshold_value_position", regionThresholdSpinner.SelectedItemPosition) |> ignore
+        do editor.PutInt ("threshold_value", regionThreshold) |> ignore
+        do editor.PutInt ("region_timeout", regionTimeout) |> ignore
 
         do editor.Apply ()
 
@@ -247,7 +247,13 @@ type MainActivity () =
             let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButton)
             do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
             let applyButton = layout.FindViewById<Button>(Resources.Id.applyButton)
-            do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
+            do applyButton.Click.Add (fun dArgs -> 
+                regionTimeout <- seekBar2.Progress
+                regionThreshold <- seekBar1.Progress-110
+                do updateTextregionTrackingcb () 
+                alert.Dismiss())
+            do seekBar1.Progress <- regionThreshold + 110
+            do seekBar2.Progress <- regionTimeout 
             do alert.Show() |> ignore
             true
         else
