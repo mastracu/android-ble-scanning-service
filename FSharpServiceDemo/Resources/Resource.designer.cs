@@ -220,55 +220,58 @@ namespace FSharpServiceDemo
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int ic_action_perm_data_setting = 2130837504;
+			public const int ic_action_multiline_chart = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int ic_stat_tap_and_play = 2130837505;
+			public const int ic_action_perm_data_setting = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int ic_stat_volume_off = 2130837506;
+			public const int ic_stat_tap_and_play = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int ic_stat_volume_up = 2130837507;
+			public const int ic_stat_volume_off = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int notification_action_background = 2130837508;
+			public const int ic_stat_volume_up = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int notification_bg = 2130837509;
+			public const int notification_action_background = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int notification_bg_low = 2130837510;
+			public const int notification_bg = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int notification_bg_low_normal = 2130837511;
+			public const int notification_bg_low = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int notification_bg_low_pressed = 2130837512;
+			public const int notification_bg_low_normal = 2130837512;
 			
 			// aapt resource value: 0x7f020009
-			public const int notification_bg_normal = 2130837513;
+			public const int notification_bg_low_pressed = 2130837513;
 			
 			// aapt resource value: 0x7f02000a
-			public const int notification_bg_normal_pressed = 2130837514;
+			public const int notification_bg_normal = 2130837514;
 			
 			// aapt resource value: 0x7f02000b
-			public const int notification_icon_background = 2130837515;
-			
-			// aapt resource value: 0x7f02000f
-			public const int notification_template_icon_bg = 2130837519;
-			
-			// aapt resource value: 0x7f020010
-			public const int notification_template_icon_low_bg = 2130837520;
+			public const int notification_bg_normal_pressed = 2130837515;
 			
 			// aapt resource value: 0x7f02000c
-			public const int notification_tile_bg = 2130837516;
+			public const int notification_icon_background = 2130837516;
+			
+			// aapt resource value: 0x7f020010
+			public const int notification_template_icon_bg = 2130837520;
+			
+			// aapt resource value: 0x7f020011
+			public const int notification_template_icon_low_bg = 2130837521;
 			
 			// aapt resource value: 0x7f02000d
-			public const int notify_panel_notification_icon_bg = 2130837517;
+			public const int notification_tile_bg = 2130837517;
 			
 			// aapt resource value: 0x7f02000e
-			public const int restart = 2130837518;
+			public const int notify_panel_notification_icon_bg = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public const int restart = 2130837519;
 			
 			static Drawable()
 			{
@@ -283,8 +286,8 @@ namespace FSharpServiceDemo
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0b003a
-			public const int BLECapabilities = 2131427386;
+			// aapt resource value: 0x7f0b003b
+			public const int BLECapabilities = 2131427387;
 			
 			// aapt resource value: 0x7f0b000e
 			public const int LowLatencyMode = 2131427342;
@@ -343,8 +346,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000c
 			public const int clear_log_button = 2131427340;
 			
-			// aapt resource value: 0x7f0b0037
-			public const int datawedgeRebuild = 2131427383;
+			// aapt resource value: 0x7f0b0038
+			public const int datawedgeRebuild = 2131427384;
 			
 			// aapt resource value: 0x7f0b0034
 			public const int defaultButton = 2131427380;
@@ -352,8 +355,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0017
 			public const int en_language = 2131427351;
 			
-			// aapt resource value: 0x7f0b0039
-			public const int enableRXLogger = 2131427385;
+			// aapt resource value: 0x7f0b003a
+			public const int enableRXLogger = 2131427386;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int end_padder = 2131427374;
@@ -394,6 +397,9 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000a
 			public const int listView1 = 2131427338;
 			
+			// aapt resource value: 0x7f0b0037
+			public const int logAnalytics = 2131427383;
+			
 			// aapt resource value: 0x7f0b0021
 			public const int media_actions = 2131427361;
 			
@@ -409,14 +415,14 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0023
 			public const int notification_main_column_container = 2131427363;
 			
-			// aapt resource value: 0x7f0b0038
-			public const int printBarcodes = 2131427384;
+			// aapt resource value: 0x7f0b0039
+			public const int printBarcodes = 2131427385;
 			
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b003b
-			public const int regionTrackingParameters = 2131427387;
+			// aapt resource value: 0x7f0b003c
+			public const int regionTrackingParameters = 2131427388;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
@@ -563,7 +569,10 @@ namespace FSharpServiceDemo
 		{
 			
 			// aapt resource value: 0x7f0d0000
-			public const int option = 2131558400;
+			public const int log = 2131558400;
+			
+			// aapt resource value: 0x7f0d0001
+			public const int option = 2131558401;
 			
 			static Menu()
 			{

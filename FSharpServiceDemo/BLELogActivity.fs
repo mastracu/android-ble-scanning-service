@@ -10,39 +10,65 @@ open Android.Widget
 open Android.Bluetooth
 open Android.Util
 
+open helper
+
 type Resources = FSharpServiceDemo.Resource
 
-type BeaconObservation = 
-   {ObservationTimestamp:int64; BeaconAddress:string; SignalStrength: int; DeviceName: string} 
-   override x.ToString() = 
-      helper.epoch2timestamp x.ObservationTimestamp + "    " + x.BeaconAddress  + "    " + x.SignalStrength.ToString()
-   member x.SendBroadcast (cont:Context) action =
-       let int = new Intent ()
-       do  int.SetAction action |> ignore
-       do  int.PutExtra (action + ".ObservationTimestamp", x.ObservationTimestamp) |> ignore
-       do  int.PutExtra (action + ".BeaconAddress", x.BeaconAddress) |> ignore
-       do  int.PutExtra (action + ".SignalStrength", x.SignalStrength) |> ignore
-       do  cont.SendBroadcast int
-
-type ObservationReceiver (extraBase:string, e:Event<BeaconObservation>) = 
-   inherit BroadcastReceiver()               
+type ObservationReceiver (extraBase:string, func: BeaconObservation -> Unit) = 
+   inherit BroadcastReceiver()
+   let mutable mfunc = func
+   member this.func with set (value) = mfunc <- value               
    override this.OnReceive (context, intent) =
        { ObservationTimestamp = intent.GetLongExtra (extraBase + ".ObservationTimestamp", 0L) 
          BeaconAddress = intent.GetStringExtra (extraBase + ".BeaconAddress")
          SignalStrength = intent.GetIntExtra (extraBase + ".SignalStrength", 0)
-         DeviceName = "" } |> e.Trigger
+         DeviceName = "" } |> mfunc
         
+
 // https://developer.xamarin.com/guides/android/advanced_topics/working_with_androidmanifest.xml/
 [<Activity (Label = "BLEScanLog")>]
 type BLELogActivity () =
     inherit Activity ()
           
-    let bleNotification = new Event<BeaconObservation> ()
+    let zebraLog = new Android.Runtime.JavaList<string> ()
+    let sessionStatistics = new SessionStatisticsProcessor ()
+    let observationReceiver = new ObservationReceiver("com.zebra.newBLEObservation", fun bo -> ())
 
     let mutable listViewStatusLog:ListView = null
     let mutable logAdapter:ArrayAdapter = null
-    let zebraLog = new Android.Runtime.JavaList<string> ()
+    let mutable isStoppedReceiver = true
 
+    let clearSession (context:Activity) =
+        let dialog = 
+            (new AlertDialog.Builder(context))
+                .SetTitle("Clear Session")
+                .SetMessage("Please realize this will wipe out all collected data")
+                .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                .SetPositiveButton("Clear" , new EventHandler<DialogClickEventArgs> 
+                        (fun s dArgs -> 
+                            do sessionStatistics.Empty()
+                            do zebraLog.Clear()
+                            do context.RunOnUiThread (fun () -> do logAdapter.NotifyDataSetChanged())) )
+                .Create()
+        do dialog.Show()
+       
+    let statsShow context =
+        let dialog = (new AlertDialog.Builder(context))
+                         .SetTitle("Session Statistics")
+                         .SetMessage(sessionStatistics.FetchReport())
+                         .SetNeutralButton("OK" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                         .Create()
+        do dialog.Show()
+   
+    let StopLogEntry (context:Activity) now =
+        do zebraLog.Insert(0, sprintf "%s\t--- LOGGING STOPPED ---" (epoch2timestamp now))
+        do context.RunOnUiThread (fun () -> do logAdapter.NotifyDataSetChanged()) 
+            
+    member this.NewLogEntry newObservation =
+        do sessionStatistics.UpdateWith newObservation 
+        do zebraLog.Insert(0, sprintf "%A" newObservation)
+        do this.RunOnUiThread (fun () -> do logAdapter.NotifyDataSetChanged()) 
+   
     override this.OnResume () =
         base.OnResume ()
 
@@ -60,22 +86,40 @@ type BLELogActivity () =
         do listViewStatusLog.Adapter <- logAdapter
         let buttonStopLog = this.FindViewById<Button>(Resources.Id.stop_receiver_button)
         let buttonClearLog = this.FindViewById<Button>(Resources.Id.clear_log_button)
-
-        use filter = new IntentFilter("com.zebra.newBLEObservation")
+        
+        observationReceiver.func <- this.NewLogEntry
+        let filter = new IntentFilter("com.zebra.newBLEObservation")
         do filter.AddCategory "android.intent.category.DEFAULT"
-        let obsRec = new ObservationReceiver("com.zebra.newBLEObservation", bleNotification)
-        do this.RegisterReceiver (obsRec, filter) |> ignore
-
-        do Event.add  (fun newObservation -> 
-           do zebraLog.Insert(0, newObservation.ToString())
-           do this.RunOnUiThread (fun () -> do logAdapter.NotifyDataSetChanged()) ) bleNotification.Publish
+        do this.RegisterReceiver (observationReceiver, filter) |> ignore
+        do isStoppedReceiver <- false
 
         do buttonStopLog.Click.Add (fun args -> 
-           do this.UnregisterReceiver (obsRec) |> ignore
-           do buttonStopLog.Enabled <- false
+           if isStoppedReceiver then 
+               do this.RegisterReceiver (observationReceiver, filter) |> ignore               
+               do buttonStopLog.Text <- "Stop Receiver"
+               do isStoppedReceiver <- false
+           else
+               let now = Java.Lang.JavaSystem.CurrentTimeMillis() 
+               do sessionStatistics.CloseSession now
+               do this.UnregisterReceiver (observationReceiver) |> ignore
+               do buttonStopLog.Text <- "Start Receiver"
+               do StopLogEntry this now
+               do isStoppedReceiver <- true
+               do statsShow this
         )
 
         do buttonClearLog.Click.Add (fun args -> 
-           do zebraLog.Clear()
-           do this.RunOnUiThread (fun () -> do logAdapter.NotifyDataSetChanged())
+           do clearSession this
         )
+
+    override this.OnCreateOptionsMenu menu =
+        let inflater = new MenuInflater (this) 
+        do inflater.Inflate (Resources.Menu.log, menu)
+        true
+
+    override this.OnOptionsItemSelected item = 
+        if item.ItemId = Resources.Id.logAnalytics then
+           do statsShow this   
+        else
+           ()
+        true

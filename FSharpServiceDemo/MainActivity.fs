@@ -10,6 +10,8 @@ open Android.Runtime
 open Android.Views
 open Android.Widget
 open Android.Preferences
+open Android.Bluetooth
+
 
 type Resources = FSharpServiceDemo.Resource
 
@@ -17,13 +19,12 @@ type Resources = FSharpServiceDemo.Resource
 //https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
 //https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
 //TODO: Ask for confirmation before new dw profile is applied - AlertDialog
-//TODO: Analysis of captured logging - assumes stationary capture - for each address seen show max RSSI, longest gap, beacon count. Delta across max RSSIs. Service will need to send observation object as part of intent.
 //TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
 //TODO: option menu entry to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
-//TODO: option menu entry to check whether BLE adapter supports multi-advertisement (hence it can act as a beacon), batchscanning and ohters. 
 //TODO: option menu entry to send notification of location over Internet (whatsapp ?)
-// https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
-
+//https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
+//Enable BLE option menu entry
+//Run-time request permission option menu entry
 
 // Launcher icon generator: http://romannurik.github.io/AndroidAssetStudio/
 
@@ -240,31 +241,50 @@ type MainActivity () =
             do Asset2DWAutoImport "dwprofile_Bleservice.db" 
             true
         elif item.ItemId = Resources.Id.regionTrackingParameters then
-            let alert = new Dialog(this)
             let inflater = this.GetSystemService(Context.LayoutInflaterService) :?> LayoutInflater
             let layout = inflater.Inflate (Resources.Layout.regionTrackingParms, this.FindViewById<ViewGroup>(Resources.Id.layoutDialog) )
-            do alert.SetTitle ("Region Tracking Parms") |> ignore
-            do alert.SetCancelable false |> ignore
-            do alert.SetContentView layout |> ignore
             let text1 = layout.FindViewById<TextView>(Resources.Id.textView1)
             let seekBar1 = layout.FindViewById<SeekBar>(Resources.Id.seekBar1)
             let text2 = layout.FindViewById<TextView>(Resources.Id.textView2)
             let seekBar2 = layout.FindViewById<SeekBar>(Resources.Id.seekBar2)
+            let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButton)
+            let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButton)
+            let applyButton = layout.FindViewById<Button>(Resources.Id.applyButton)
+
             do seekBar1.ProgressChanged.Add (fun e -> text1.Text <- "Enter Region RSSI Threshold: " + (e.Progress-110).ToString() + " dbm" ) 
             do seekBar2.ProgressChanged.Add (fun e -> text2.Text <- "Region Exit Timeout: " + e.Progress.ToString() + " secs" )
-            let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButton)
+
+            let alert = (new Dialog(this))
+            do alert.SetTitle "Region Tracking Parms"
+            do alert.SetContentView layout
+            do alert.SetCancelable false
+
             do defaultButton.Click.Add (fun dArgs -> seekBar1.Progress <- 20; seekBar2.Progress <- 5)
-            let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButton)
             do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
-            let applyButton = layout.FindViewById<Button>(Resources.Id.applyButton)
             do applyButton.Click.Add (fun dArgs -> 
                 regionTimeout <- seekBar2.Progress
                 regionThreshold <- seekBar1.Progress-110
                 do updateTextregionTrackingcb () 
                 alert.Dismiss())
+
             do seekBar1.Progress <- regionThreshold + 110
             do seekBar2.Progress <- regionTimeout 
-            do alert.Show() |> ignore
+
+            do alert.Show()
+            true
+        elif item.ItemId = Resources.Id.BLECapabilities then
+            use btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
+            use ba = btManager.Adapter
+            let text = sprintf "MultiAdvertSupport: %s\nScanBatchSupport: %s\nOffloadFilterSupport: %s" 
+                            (ba.IsMultipleAdvertisementSupported.ToString()) 
+                            (ba.IsOffloadedScanBatchingSupported.ToString()) 
+                            (ba.IsOffloadedFilteringSupported.ToString())
+            let dialog = (new AlertDialog.Builder(this))
+                            .SetTitle("BLE Capabilities")
+                            .SetMessage(text)
+                            .SetNeutralButton("OK" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                            .Create()
+            do dialog.Show()
             true
         else
             true

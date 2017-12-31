@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/logAnalytics"
+        android:icon="@drawable/ic_action_multiline_chart"
+        android:title="Log Analytics" 
+        android:showAsAction="ifRoom" />
+</menu>

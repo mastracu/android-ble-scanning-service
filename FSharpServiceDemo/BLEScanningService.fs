@@ -8,7 +8,7 @@ open Android.OS
 open Android.Bluetooth
 open Android.Speech.Tts
 open Android.Support.V4
-
+open helper
 
 // https://github.com/xamarin/samples-mnoodroid/tree/master/ApplicationFundamentals/ServiceSamples/ForegroundServiceDemo
 
@@ -16,15 +16,12 @@ type Resources = FSharpServiceDemo.Resource
 
 // TODO: apply best practice for multi-language resources/apps in Android
 // TODO: work-around Nougat 30 minutes BLE scanning 
+// TODO: create notifications if ble is disabled / adapter unavailale / missing run-time permission and then destroys service-
 
-// For future use - currently not used
-// type BeaconCount = { addr: string; count:int}
-
-
-type UMScanCallback (e: Event<BLELog.BeaconObservation>) =
+type UMScanCallback (e: Event<BeaconObservation>) =
    inherit LE.ScanCallback ()
    let reportResult (sResult:LE.ScanResult) = 
-      let newObservation:BLELog.BeaconObservation = 
+      let newObservation:BeaconObservation = 
          { ObservationTimestamp = Java.Lang.JavaSystem.CurrentTimeMillis(); BeaconAddress = sResult.Device.Address 
            SignalStrength =  sResult.Rssi; DeviceName = sResult.ScanRecord.DeviceName }
       e.Trigger newObservation
@@ -66,7 +63,7 @@ type BleScanningService() =
    let mutable textToSpeech = Unchecked.defaultof<TextToSpeech>
    let mutable regionAddress = Unchecked.defaultof<Option<string>>
 
-   let eventObservation = new Event<BLELog.BeaconObservation> ()
+   let eventObservation = new Event<BeaconObservation> ()
    let mBLuetoothLeCallback = new UMScanCallback(eventObservation)
    
 
@@ -79,7 +76,7 @@ type BleScanningService() =
                ()
            end   
 
-   member this.obsAction (bo:BLELog.BeaconObservation) = 
+   member this.obsAction (bo:BeaconObservation) = 
         if (Seq.length beacon2Observe = 0 || (Seq.exists (fun e -> e = bo.BeaconAddress) beacon2Observe) )  then
             if regionTrackingMode then 
                 let enterRegionifAboveThreshold () =
