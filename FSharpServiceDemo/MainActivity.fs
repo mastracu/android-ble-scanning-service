@@ -12,6 +12,8 @@ open Android.Widget
 open Android.Preferences
 open Android.Bluetooth
 
+open helper
+
 
 type Resources = FSharpServiceDemo.Resource
 
@@ -323,6 +325,8 @@ type MainActivity () =
             let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButtonNotification)
             let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButtonNotification)
             let applyButton = layout.FindViewById<Button>(Resources.Id.applyButtonNotification)
+            let testButton = layout.FindViewById<Button>(Resources.Id.buttonTestNotification)
+            let testResult = layout.FindViewById<TextView>(Resources.Id.textViewTestNotification)
 
             let alert = (new Dialog(this))
             do alert.SetTitle "Region Notifications"
@@ -335,6 +339,15 @@ type MainActivity () =
                                          regionNotificationUrlStr <- notificationUrl.Text
                                          regionNotificationEnableBool <- enableNotifications.Checked
                                          alert.Dismiss() )
+            do testButton.Click.Add (fun dArgs ->
+                                         this.RunOnUiThread ( fun () -> testResult.Text <- "Test in progress...")
+                                         let jsonString = serialize "FAKEREGION" "FAKEDEVICE" (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
+                                         AsyncSendRegionNotification notificationUrl.Text jsonString 
+                                              (fun s -> this.RunOnUiThread(fun () -> testResult.Text <- "Result: PASSED")) 
+                                              (fun exn -> this.RunOnUiThread(fun () -> testResult.Text <- "Result: TIMEOUT EXPRIRED"))
+                                        )
+
+
             do notificationUrl.Text <- regionNotificationUrlStr
             do enableNotifications.Checked <- regionNotificationEnableBool
 

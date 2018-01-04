@@ -10,18 +10,21 @@ open System
 open FSharp.Data.HttpRequestHeaders
 open FSharp.Data.HttpContentTypes
 
+
 //http://fsharp.github.io/FSharp.Data/library/Http.html
 //data sent in JSON format
 //https://stackoverflow.com/questions/16652014/async-exception-handling-in-f
 let AsyncSendRegionNotification url jsonData cont1 cont2 =
-    async {
-        let! strorexn = Async.Catch (FSharp.Data.Http.AsyncRequestString (url, headers = [ ContentType Json ], body = FSharp.Data.TextRequest jsonData))
-        return 
-            match strorexn with
-                | Choice1Of2 s -> cont1 s 
-                | Choice2Of2 e -> cont2 e
-            |> ignore
-     } |> Async.Start 
+    let asyncWorkflowSend =  
+       async {  try
+                    let! completor1 =  Async.StartChild (FSharp.Data.Http.AsyncRequestString (url, 
+                                                            headers = [ ContentType Json ], 
+                                                            body = FSharp.Data.TextRequest jsonData), millisecondsTimeout = 4000)
+                    let! result1 = completor1
+                    return (cont1 result1)
+                with error -> 
+                    return (cont2 error) }       
+    asyncWorkflowSend |> Async.Start 
 
 type RegionEventType = 
  | EnterRegion
@@ -36,11 +39,11 @@ type RegionEvent =
    }
 
 //I could have used JSON.net library, but it's got dozens of dependencies - a bit of an overkill for what I need to do.
-let serialize regionName deviceID eventType = 
+let serialize regionName deviceID (timeStamp:int64) eventType = 
     let regionEventIdx = match eventType with 
                           | EnterRegion -> 0
                           | ExitRegion -> 1
-    sprintf """{ "regionName":"%s", "deviceID":"%s", "timeStamp":123456, "eventType":{"_tag":%d} }""" regionName deviceID regionEventIdx
+    sprintf """{ "regionName":"%s", "deviceID":"%s", "timeStamp":%i, "eventType":{"_tag":%d} }""" regionName deviceID timeStamp regionEventIdx
 
 
 

@@ -18,13 +18,31 @@
         android:inputType="textMultiLine|textNoSuggestions"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20.0dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutTestNotification">
+        <Button
+            android:text="Test URL"
+            android:layout_width="108.0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonTestNotification"
+            android:layout_marginRight="16.0dp" />
+        <TextView
+            android:text="Result: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTestNotification" />
+    </LinearLayout>
     <CheckBox
         android:text="Enable Notifications to restful Web Service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/enableNotifications"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20.0dp" />
+        android:layout_marginBottom="20.0dp"
+        android:layout_marginTop="16.7dp" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

@@ -94,9 +94,10 @@ type BleScanningService() =
                         do regionTimeoutTimer.Start()
                         
                         if regionNotificationEnableBool then
-                            let jsonString = helper.serialize bo.BeaconAddress "TC8000UM" EnterRegion
+                            let jsonString = helper.serialize bo.BeaconAddress "TC8000UM" bo.ObservationTimestamp EnterRegion
                             AsyncSendRegionNotification regionNotificationUrlStr jsonString 
-                               (fun s -> Log.Debug ("AsyncSendRegionNotification", s)) (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message))
+                               (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 
+                               (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message) |> ignore)
 // https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/chaining-tasks-by-using-continuation-tasks - a nice doc describing an equivalent approach in .net
                         else
                             () 
@@ -302,9 +303,10 @@ type BleScanningService() =
             do this.RefreshNotification()
 
             if regionNotificationEnableBool then
-                let jsonString = helper.serialize add "TC8000UM" ExitRegion
+                let jsonString = helper.serialize add "TC8000UM" (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
                 AsyncSendRegionNotification regionNotificationUrlStr jsonString 
-                    (fun s -> Log.Debug ("AsyncSendRegionNotification", s)) (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message))
+                    (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 
+                    (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message) |> ignore)
             else
                 ()
 

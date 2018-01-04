@@ -289,8 +289,8 @@ namespace FSharpServiceDemo
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0b0042
-			public const int BLECapabilities = 2131427394;
+			// aapt resource value: 0x7f0b0045
+			public const int BLECapabilities = 2131427397;
 			
 			// aapt resource value: 0x7f0b000e
 			public const int LowLatencyMode = 2131427342;
@@ -316,11 +316,11 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b002c
 			public const int actions = 2131427372;
 			
-			// aapt resource value: 0x7f0b003d
-			public const int applyButton = 2131427389;
+			// aapt resource value: 0x7f0b0040
+			public const int applyButton = 2131427392;
 			
-			// aapt resource value: 0x7f0b0035
-			public const int applyButtonNotification = 2131427381;
+			// aapt resource value: 0x7f0b0038
+			public const int applyButtonNotification = 2131427384;
 			
 			// aapt resource value: 0x7f0b0005
 			public const int async = 2131427333;
@@ -340,11 +340,14 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0014
 			public const int btadd3_filter = 2131427348;
 			
-			// aapt resource value: 0x7f0b003c
-			public const int cancelButton = 2131427388;
+			// aapt resource value: 0x7f0b0033
+			public const int buttonTestNotification = 2131427379;
 			
-			// aapt resource value: 0x7f0b0034
-			public const int cancelButtonNotification = 2131427380;
+			// aapt resource value: 0x7f0b003f
+			public const int cancelButton = 2131427391;
+			
+			// aapt resource value: 0x7f0b0037
+			public const int cancelButtonNotification = 2131427383;
 			
 			// aapt resource value: 0x7f0b001f
 			public const int cancel_action = 2131427359;
@@ -355,23 +358,23 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000c
 			public const int clear_log_button = 2131427340;
 			
-			// aapt resource value: 0x7f0b003f
-			public const int datawedgeRebuild = 2131427391;
+			// aapt resource value: 0x7f0b0042
+			public const int datawedgeRebuild = 2131427394;
 			
-			// aapt resource value: 0x7f0b003b
-			public const int defaultButton = 2131427387;
+			// aapt resource value: 0x7f0b003e
+			public const int defaultButton = 2131427390;
 			
-			// aapt resource value: 0x7f0b0033
-			public const int defaultButtonNotification = 2131427379;
+			// aapt resource value: 0x7f0b0036
+			public const int defaultButtonNotification = 2131427382;
 			
 			// aapt resource value: 0x7f0b0017
 			public const int en_language = 2131427351;
 			
-			// aapt resource value: 0x7f0b0032
-			public const int enableNotifications = 2131427378;
+			// aapt resource value: 0x7f0b0035
+			public const int enableNotifications = 2131427381;
 			
-			// aapt resource value: 0x7f0b0041
-			public const int enableRXLogger = 2131427393;
+			// aapt resource value: 0x7f0b0044
+			public const int enableRXLogger = 2131427396;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int end_padder = 2131427374;
@@ -397,8 +400,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0008
 			public const int italic = 2131427336;
 			
-			// aapt resource value: 0x7f0b0036
-			public const int layoutDialog = 2131427382;
+			// aapt resource value: 0x7f0b0039
+			public const int layoutDialog = 2131427385;
 			
 			// aapt resource value: 0x7f0b002f
 			public const int layoutNotificationDialog = 2131427375;
@@ -412,11 +415,14 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0015
 			public const int linearLayout1 = 2131427349;
 			
+			// aapt resource value: 0x7f0b0032
+			public const int linearLayoutTestNotification = 2131427378;
+			
 			// aapt resource value: 0x7f0b000a
 			public const int listView1 = 2131427338;
 			
-			// aapt resource value: 0x7f0b003e
-			public const int logAnalytics = 2131427390;
+			// aapt resource value: 0x7f0b0041
+			public const int logAnalytics = 2131427393;
 			
 			// aapt resource value: 0x7f0b0021
 			public const int media_actions = 2131427361;
@@ -436,17 +442,17 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0023
 			public const int notification_main_column_container = 2131427363;
 			
-			// aapt resource value: 0x7f0b0044
-			public const int notificationsPost = 2131427396;
+			// aapt resource value: 0x7f0b0047
+			public const int notificationsPost = 2131427399;
 			
-			// aapt resource value: 0x7f0b0040
-			public const int printBarcodes = 2131427392;
+			// aapt resource value: 0x7f0b0043
+			public const int printBarcodes = 2131427395;
 			
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b0043
-			public const int regionTrackingParameters = 2131427395;
+			// aapt resource value: 0x7f0b0046
+			public const int regionTrackingParameters = 2131427398;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
@@ -457,11 +463,11 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0025
 			public const int right_side = 2131427365;
 			
-			// aapt resource value: 0x7f0b0038
-			public const int seekBar1 = 2131427384;
+			// aapt resource value: 0x7f0b003b
+			public const int seekBar1 = 2131427387;
 			
-			// aapt resource value: 0x7f0b003a
-			public const int seekBar2 = 2131427386;
+			// aapt resource value: 0x7f0b003d
+			public const int seekBar2 = 2131427389;
 			
 			// aapt resource value: 0x7f0b0010
 			public const int start_blescan_service_button = 2131427344;
@@ -481,14 +487,17 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0003
 			public const int text2 = 2131427331;
 			
-			// aapt resource value: 0x7f0b0037
-			public const int textView1 = 2131427383;
+			// aapt resource value: 0x7f0b003a
+			public const int textView1 = 2131427386;
 			
-			// aapt resource value: 0x7f0b0039
-			public const int textView2 = 2131427385;
+			// aapt resource value: 0x7f0b003c
+			public const int textView2 = 2131427388;
 			
 			// aapt resource value: 0x7f0b0030
 			public const int textViewEnterUrl = 2131427376;
+			
+			// aapt resource value: 0x7f0b0034
+			public const int textViewTestNotification = 2131427380;
 			
 			// aapt resource value: 0x7f0b0026
 			public const int time = 2131427366;
