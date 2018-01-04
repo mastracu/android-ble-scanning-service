@@ -3,6 +3,46 @@ module helper
 
 open System
 open Android.Content
+open System.Text
+open System.IO
+open System.Net
+open System
+open FSharp.Data.HttpRequestHeaders
+open FSharp.Data.HttpContentTypes
+
+//http://fsharp.github.io/FSharp.Data/library/Http.html
+//data sent in JSON format
+//https://stackoverflow.com/questions/16652014/async-exception-handling-in-f
+let AsyncSendRegionNotification url jsonData cont1 cont2 =
+    async {
+        let! strorexn = Async.Catch (FSharp.Data.Http.AsyncRequestString (url, headers = [ ContentType Json ], body = FSharp.Data.TextRequest jsonData))
+        return 
+            match strorexn with
+                | Choice1Of2 s -> cont1 s 
+                | Choice2Of2 e -> cont2 e
+            |> ignore
+     } |> Async.Start 
+
+type RegionEventType = 
+ | EnterRegion
+ | ExitRegion
+
+type RegionEvent =
+   { 
+      regionName : string;
+      deviceID : string;
+      timeStamp : int64;
+      eventType : RegionEventType;
+   }
+
+//I could have used JSON.net library, but it's got dozens of dependencies - a bit of an overkill for what I need to do.
+let serialize regionName deviceID eventType = 
+    let regionEventIdx = match eventType with 
+                          | EnterRegion -> 0
+                          | ExitRegion -> 1
+    sprintf """{ "regionName":"%s", "deviceID":"%s", "timeStamp":123456, "eventType":{"_tag":%d} }""" regionName deviceID regionEventIdx
+
+
 
 let epoch2timestamp (millisec:int64) = 
     let startTime = new DateTime (1970,1,1)
@@ -146,4 +186,8 @@ let EXTRA_SERVICE_SCANMODE = "BLEService.extra.SERVICE_SCANMODE"
 let EXTRA_SERVICE_REGIONTRACKING = "BLEService.extra.SERVICE_REGIONTRACKING"
 let EXTRA_SERVICE_RSSITHRESHOLD = "BLEService.extra.SERVICE_RSSITHRESHOLD"
 let EXTRA_SERVICE_REGION_TIMEOUT = "BLEService.extra.SERVICE_REGION_TIMEOUT"
+let EXTRA_SERVICE_NOTIFICATION = "BLEService.extra.SERVICE_NOTIFICATION"
+let EXTRA_SERVICE_NOTIFICATION_URL = "BLEService.extra.SERVICE_NOTIFICATION_URL"
+
+let REGION_NOTIFICATION_URL = "http://192.168.1.133:8082/regionEvent"
 

@@ -18,11 +18,15 @@ type Resources = FSharpServiceDemo.Resource
 //TODO: support of MarshMallow and Nougat - currently only supports Lollipop (new run-time permission model see https://gimbal.com/marshmallow-permissions/)
 //https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
 //https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
-//TODO: Ask for confirmation before new dw profile is applied - AlertDialog
 //TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
 //TODO: option menu entry to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
-//TODO: option menu entry to send notification of location over Internet (whatsapp ?)
-//https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
+//also com.symbol.rxlogger.intent.action.BACKUP_NOW - build a dialog that also contains a log of the different actions (timestamp and power scan type) - sebd broadcast intents
+//TODO: make HTTP POST notification parameters persistent wth shared preferences 
+//http://fsharp.github.io/FSharp.Data/library/Http.html
+//https://wiki.haskell.org/Simple_Servers
+//https://www.yesodweb.com/blog/2011/01/announcing-warp
+//https://wiki.haskell.org/Web/Servers
+
 //Enable BLE option menu entry
 //Run-time request permission option menu entry
 
@@ -47,7 +51,7 @@ type barcodeReceiver (dwIntentAction: String, barcodeProcessor: String -> String
       | false ->
          ()
 
-[<Activity (Label = "BLEScan", MainLauncher = true, Icon = "@mipmap/ic_launcher")>]
+[<Activity (Label = "bleScan", MainLauncher = true, Icon = "@mipmap/ic_launcher")>]
 [<IntentFilter [| "BLEService.action.MAIN_ACTIVITY" |]>]
 type MainActivity () =
     inherit Activity ()
@@ -56,6 +60,8 @@ type MainActivity () =
     let mutable regionTrackingcb = Unchecked.defaultof<CheckBox>
     let mutable regionThreshold = Unchecked.defaultof<int>
     let mutable regionTimeout = Unchecked.defaultof<int>
+    let mutable regionNotificationEnableBool = false
+    let mutable regionNotificationUrlStr = helper.REGION_NOTIFICATION_URL
 
     let updateTextregionTrackingcb () =  
        regionTrackingcb.Text <- "RegionTracking (" + regionThreshold.ToString() + " dbm, " + regionTimeout.ToString() + " secs)" 
@@ -160,6 +166,10 @@ type MainActivity () =
 
         do regionThreshold <- prefs.GetInt ("threshold_value", -90)
         do regionTimeout <- prefs.GetInt ("region_timeout", 5)
+
+        do regionNotificationEnableBool <- prefs.GetBoolean ("region_notification_enable", false)
+        do regionNotificationUrlStr <- prefs.GetString ("region_notification_url", helper.REGION_NOTIFICATION_URL)
+        
         do updateTextregionTrackingcb ()
 
         startServiceButton.Click.Add (fun args -> 
@@ -177,6 +187,11 @@ type MainActivity () =
                        startServiceIntent.PutExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, regionThreshold) |> ignore 
                        startServiceIntent.PutExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, regionTimeout) |> ignore 
 //                          (regionThresholdSpinner.GetItemAtPosition regionThresholdSpinner.SelectedItemPosition).ToString() |> int) |> ignore
+                       startServiceIntent.PutExtra (helper.EXTRA_SERVICE_NOTIFICATION, regionNotificationEnableBool) |> ignore
+                       if regionNotificationEnableBool then
+                            startServiceIntent.PutExtra (helper.EXTRA_SERVICE_NOTIFICATION_URL, regionNotificationUrlStr) |> ignore 
+                       else
+                            ()
                    else
                        ()
                    this.StartService (startServiceIntent) |> ignore
@@ -214,6 +229,8 @@ type MainActivity () =
         do editor.PutBoolean ("region_tracking", regionTrackingcb.Checked ) |> ignore
         do editor.PutInt ("threshold_value", regionThreshold) |> ignore
         do editor.PutInt ("region_timeout", regionTimeout) |> ignore
+        do editor.PutBoolean ("region_notification_enable", regionNotificationEnableBool) |> ignore
+        do editor.PutString ("region_notification_url", regionNotificationUrlStr) |> ignore
 
         do editor.Apply ()
 
@@ -224,21 +241,31 @@ type MainActivity () =
 
     override this.OnOptionsItemSelected item = 
         if item.ItemId = Resources.Id.datawedgeRebuild then
-            // http://techdocs.zebra.com/datawedge/6-5/guide/settings/
-            let Asset2DWAutoImport filename =
-                let path = "/enterprise/device/settings/datawedge/autoimport/"
-                let assets = this.Assets
-                let fromStream = assets.Open filename
-                // I create the file - RW for owner only, not visibile to DW
-                let toFileStream = File.Create (path + filename)
-                do fromStream.CopyTo toFileStream
-                do toFileStream.Close ()
-                do fromStream.Close ()
-                // once it is copied, I give RW access to everyone in order for DW to process it and then remove it.  
-                let javaFile =  new Java.IO.File (path + filename)
-                do javaFile.SetWritable (true,false) |> ignore
-                do javaFile.SetReadable (true,false) |> ignore
-            do Asset2DWAutoImport "dwprofile_Bleservice.db" 
+            let dialog = 
+                (new AlertDialog.Builder(this))
+                        .SetTitle("bleService DW Profile")
+                        .SetMessage("Existing bleService DW profile will be overridden")
+                        .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                        .SetPositiveButton("Apply" , new EventHandler<DialogClickEventArgs> 
+                                (fun s dArgs -> 
+                                    // http://techdocs.zebra.com/datawedge/6-5/guide/settings/
+                                    let Asset2DWAutoImport filename =
+                                        let path = "/enterprise/device/settings/datawedge/autoimport/"
+                                        let assets = this.Assets
+                                        let fromStream = assets.Open filename
+                                        // I create the file - RW for owner only, not visibile to DW
+                                        let toFileStream = File.Create (path + filename)
+                                        do fromStream.CopyTo toFileStream
+                                        do toFileStream.Close ()
+                                        do fromStream.Close ()
+                                        // once it is copied, I give RW access to everyone in order for DW to process it and then remove it.  
+                                        let javaFile =  new Java.IO.File (path + filename)
+                                        do javaFile.SetWritable (true,false) |> ignore
+                                        do javaFile.SetReadable (true,false) |> ignore
+                                    do Asset2DWAutoImport "dwprofile_Bleservice.db" )
+                              )
+                        .Create()
+            do dialog.Show()
             true
         elif item.ItemId = Resources.Id.regionTrackingParameters then
             let inflater = this.GetSystemService(Context.LayoutInflaterService) :?> LayoutInflater
@@ -273,6 +300,8 @@ type MainActivity () =
             do alert.Show()
             true
         elif item.ItemId = Resources.Id.BLECapabilities then
+//https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html 
+//see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
             use btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
             use ba = btManager.Adapter
             let text = sprintf "MultiAdvertSupport: %s\nScanBatchSupport: %s\nOffloadFilterSupport: %s" 
@@ -280,11 +309,36 @@ type MainActivity () =
                             (ba.IsOffloadedScanBatchingSupported.ToString()) 
                             (ba.IsOffloadedFilteringSupported.ToString())
             let dialog = (new AlertDialog.Builder(this))
-                            .SetTitle("BLE Capabilities")
+                            .SetTitle("ble adapter capabilities")
                             .SetMessage(text)
                             .SetNeutralButton("OK" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
                             .Create()
             do dialog.Show()
+            true
+        elif item.ItemId = Resources.Id.notificationsPost then
+            let inflater = this.GetSystemService(Context.LayoutInflaterService) :?> LayoutInflater
+            let layout = inflater.Inflate (Resources.Layout.notificationsSettings, this.FindViewById<ViewGroup>(Resources.Id.layoutNotificationDialog) )
+            let notificationUrl = layout.FindViewById<EditText>(Resources.Id.notificationUrl)
+            let enableNotifications = layout.FindViewById<CheckBox>(Resources.Id.enableNotifications)
+            let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButtonNotification)
+            let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButtonNotification)
+            let applyButton = layout.FindViewById<Button>(Resources.Id.applyButtonNotification)
+
+            let alert = (new Dialog(this))
+            do alert.SetTitle "Region Notifications"
+            do alert.SetContentView layout
+            do alert.SetCancelable false
+
+            do defaultButton.Click.Add (fun dArgs -> notificationUrl.Text <- helper.REGION_NOTIFICATION_URL ; enableNotifications.Checked <- false)
+            do cancelButton.Click.Add (fun dArgs -> alert.Dismiss())
+            do applyButton.Click.Add (fun dArgs -> 
+                                         regionNotificationUrlStr <- notificationUrl.Text
+                                         regionNotificationEnableBool <- enableNotifications.Checked
+                                         alert.Dismiss() )
+            do notificationUrl.Text <- regionNotificationUrlStr
+            do enableNotifications.Checked <- regionNotificationEnableBool
+
+            do alert.Show()
             true
         else
             true

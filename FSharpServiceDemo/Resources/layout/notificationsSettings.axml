@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutNotificationDialog"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Enter Restful Web Service url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewEnterUrl"
+        android:layout_marginLeft="14.0dp"
+        android:layout_marginTop="20.0dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notificationUrl"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20.0dp" />
+    <CheckBox
+        android:text="Enable Notifications to restful Web Service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/enableNotifications"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20.0dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <Button
+            android:text="Default"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/defaultButtonNotification" />
+        <Button
+            android:text="CANCEL"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/cancelButtonNotification" />
+        <Button
+            android:text="APPLY"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/applyButtonNotification" />
+    </LinearLayout>
+</LinearLayout>

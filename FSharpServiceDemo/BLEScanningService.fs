@@ -14,9 +14,13 @@ open helper
 
 type Resources = FSharpServiceDemo.Resource
 
+// TODO: do an HTTP POST ping when url is configured
 // TODO: apply best practice for multi-language resources/apps in Android
-// TODO: work-around Nougat 30 minutes BLE scanning 
 // TODO: create notifications if ble is disabled / adapter unavailale / missing run-time permission and then destroys service-
+// TODO: create notification if service is unable to deliver region notification via http.
+// TODO: send beacon observation intents only on demand to reduce current consumption 
+// TODO: create workaround for 30 minute BLE SCAN timeout in Nougat 
+
 
 type UMScanCallback (e: Event<BeaconObservation>) =
    inherit LE.ScanCallback ()
@@ -62,6 +66,8 @@ type BleScanningService() =
    let regionTimeoutTimer = new System.Timers.Timer(float 5000)
    let mutable textToSpeech = Unchecked.defaultof<TextToSpeech>
    let mutable regionAddress = Unchecked.defaultof<Option<string>>
+   let mutable regionNotificationEnableBool = false
+   let mutable regionNotificationUrlStr = helper.REGION_NOTIFICATION_URL
 
    let eventObservation = new Event<BeaconObservation> ()
    let mBLuetoothLeCallback = new UMScanCallback(eventObservation)
@@ -87,6 +93,14 @@ type BleScanningService() =
                         do regionTimeoutTimer.Stop()
                         do regionTimeoutTimer.Start()
                         
+                        if regionNotificationEnableBool then
+                            let jsonString = helper.serialize bo.BeaconAddress "TC8000UM" EnterRegion
+                            AsyncSendRegionNotification regionNotificationUrlStr jsonString 
+                               (fun s -> Log.Debug ("AsyncSendRegionNotification", s)) (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message))
+// https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/chaining-tasks-by-using-continuation-tasks - a nice doc describing an equivalent approach in .net
+                        else
+                            () 
+
                         if not muted then
                            use param = new Bundle ()
                            do param.PutString (TextToSpeech.Engine.KeyParamUtteranceId, "")
@@ -287,6 +301,13 @@ type BleScanningService() =
             do regionAddress <- None
             do this.RefreshNotification()
 
+            if regionNotificationEnableBool then
+                let jsonString = helper.serialize add "TC8000UM" ExitRegion
+                AsyncSendRegionNotification regionNotificationUrlStr jsonString 
+                    (fun s -> Log.Debug ("AsyncSendRegionNotification", s)) (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message))
+            else
+                ()
+
             if not muted then
                 if localeForSpeech = Java.Util.Locale.Italy then 
                     do textToSpeech.Speak ("Uscita regione " + string add.[add.Length - 2] + " " +
@@ -332,6 +353,11 @@ type BleScanningService() =
                if regionTrackingMode then
                    do rssiThreshold <- intent.GetIntExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, -90)
                    do regionTimeoutTimer.Interval <- float (intent.GetIntExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, 5) * 1000)
+                   do regionNotificationEnableBool <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_NOTIFICATION, false)
+                   if regionNotificationEnableBool then
+                       do regionNotificationUrlStr <- intent.GetStringExtra (helper.EXTRA_SERVICE_NOTIFICATION_URL)
+                   else
+                       do ()
                else
                    do updateTimer.Start()
 

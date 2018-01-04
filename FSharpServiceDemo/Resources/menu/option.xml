@@ -14,5 +14,9 @@
   <item android:id="@+id/regionTrackingParameters"
         android:icon="@drawable/ic_action_perm_data_setting"
         android:title="RegionTracking Parameters" 
-        android:showAsAction="ifRoom" />
+        android:showAsAction="always" />
+  <item android:id="@+id/notificationsPost"
+        android:icon="@drawable/ic_action_send"
+        android:title="RegionNotification Settings"
+        android:showAsAction="always" />
 </menu>
