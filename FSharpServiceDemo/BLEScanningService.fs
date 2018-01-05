@@ -14,11 +14,9 @@ open helper
 
 type Resources = FSharpServiceDemo.Resource
 
-// TODO: do an HTTP POST ping when url is configured
 // TODO: apply best practice for multi-language resources/apps in Android
 // TODO: create notifications if ble is disabled / adapter unavailale / missing run-time permission and then destroys service-
 // TODO: create notification if service is unable to deliver region notification via http.
-// TODO: send beacon observation intents only on demand to reduce current consumption 
 // TODO: create workaround for 30 minute BLE SCAN timeout in Nougat 
 
 
@@ -65,6 +63,8 @@ type BleScanningService() =
    let mutable textToSpeech = Unchecked.defaultof<TextToSpeech>
    let mutable regionAddress = Unchecked.defaultof<Option<string>>
    let mutable regionNotificationEnableBool = false
+   let mutable beaconIntentBool = false
+
    let mutable regionNotificationUrlStr = helper.REGION_NOTIFICATION_URL
 
    let updateTimer = new System.Timers.Timer(float 10000)
@@ -124,6 +124,8 @@ type BleScanningService() =
                             do regionTimeoutTimer.Start()                                                    
                         else
                             enterRegionifAboveThreshold ()
+                if beaconIntentBool then 
+                    do bo.SendBroadcast this "com.zebra.newBLEObservation"
             else
                 if (bo.SignalStrength > topRssiInPeriod) then
                     topRssiBeaconInPeriod <- bo.BeaconAddress
@@ -137,7 +139,7 @@ type BleScanningService() =
                     do beaconCountInPeriod <- beaconCountInPeriod + 1
                 else
                     ()
-            do bo.SendBroadcast this "com.zebra.newBLEObservation"
+                do bo.SendBroadcast this "com.zebra.newBLEObservation"
         else
             () 
 
@@ -354,6 +356,7 @@ type BleScanningService() =
                                     | _ -> LE.ScanMode.LowPower
                do regionTrackingMode <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_REGIONTRACKING, false)
                if regionTrackingMode then
+                   do beaconIntentBool <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_BEACON_INTENT, false)
                    do rssiThreshold <- intent.GetIntExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, -90)
                    do regionTimeoutTimer.Interval <- float (intent.GetIntExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, 5) * 1000)
                    do regionNotificationEnableBool <- intent.GetBooleanExtra (helper.EXTRA_SERVICE_NOTIFICATION, false)

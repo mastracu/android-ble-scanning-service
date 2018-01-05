@@ -33,6 +33,13 @@
         android:progress="5"
         android:id="@+id/seekBar2"
         android:layout_marginBottom="10.0dp" />
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbObservationsIntents"
+        android:layout_marginLeft="8.0dp"
+        android:text="Send beacon observation intents"
+        android:layout_marginBottom="10.0dp" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

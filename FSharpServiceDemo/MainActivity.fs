@@ -60,6 +60,7 @@ type MainActivity () =
 
     let mutable beaconcbArray = Unchecked.defaultof<CheckBox []>
     let mutable regionTrackingcb = Unchecked.defaultof<CheckBox>
+    let mutable beaconIntentBool = false
     let mutable regionThreshold = Unchecked.defaultof<int>
     let mutable regionTimeout = Unchecked.defaultof<int>
     let mutable regionNotificationEnableBool = false
@@ -188,7 +189,7 @@ type MainActivity () =
                    if regionTrackingcb.Checked then
                        startServiceIntent.PutExtra (helper.EXTRA_SERVICE_RSSITHRESHOLD, regionThreshold) |> ignore 
                        startServiceIntent.PutExtra (helper.EXTRA_SERVICE_REGION_TIMEOUT, regionTimeout) |> ignore 
-//                          (regionThresholdSpinner.GetItemAtPosition regionThresholdSpinner.SelectedItemPosition).ToString() |> int) |> ignore
+                       startServiceIntent.PutExtra (helper.EXTRA_SERVICE_BEACON_INTENT, beaconIntentBool) |> ignore 
                        startServiceIntent.PutExtra (helper.EXTRA_SERVICE_NOTIFICATION, regionNotificationEnableBool) |> ignore
                        if regionNotificationEnableBool then
                             startServiceIntent.PutExtra (helper.EXTRA_SERVICE_NOTIFICATION_URL, regionNotificationUrlStr) |> ignore 
@@ -279,6 +280,7 @@ type MainActivity () =
             let defaultButton = layout.FindViewById<Button>(Resources.Id.defaultButton)
             let cancelButton = layout.FindViewById<Button>(Resources.Id.cancelButton)
             let applyButton = layout.FindViewById<Button>(Resources.Id.applyButton)
+            let beaconIntentCheckBox = layout.FindViewById<CheckBox>(Resources.Id.cbObservationsIntents)
 
             do seekBar1.ProgressChanged.Add (fun e -> text1.Text <- "Enter Region RSSI Threshold: " + (e.Progress-110).ToString() + " dbm" ) 
             do seekBar2.ProgressChanged.Add (fun e -> text2.Text <- "Region Exit Timeout: " + e.Progress.ToString() + " secs" )
@@ -293,12 +295,13 @@ type MainActivity () =
             do applyButton.Click.Add (fun dArgs -> 
                 regionTimeout <- seekBar2.Progress
                 regionThreshold <- seekBar1.Progress-110
+                beaconIntentBool <- beaconIntentCheckBox.Checked
                 do updateTextregionTrackingcb () 
                 alert.Dismiss())
 
             do seekBar1.Progress <- regionThreshold + 110
             do seekBar2.Progress <- regionTimeout 
-
+            do beaconIntentCheckBox.Checked <- beaconIntentBool
             do alert.Show()
             true
         elif item.ItemId = Resources.Id.BLECapabilities then
@@ -372,10 +375,9 @@ type MainActivity () =
                                 do  int.SetAction action |> ignore
                                 do this.SendBroadcast int
                                 do this.RunOnUiThread( fun() -> 
-                                        use intentToast = 
-                                            (Android.Widget.Toast.MakeText(this, "INTENT SENT: " + action, Android.Widget.ToastLength.Long))
-                                        do intentToast.Show() )                                                                )
-                        )
+                                    use intentToast = 
+                                        (Android.Widget.Toast.MakeText(this, "INTENT SENT: " + action, Android.Widget.ToastLength.Long))
+                                    do intentToast.Show() )))
                         .Create()
             do dialog.Show()
             true

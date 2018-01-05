@@ -15,8 +15,8 @@
   <string name="restart_blescan">Restart</string>
   <string name="stop_service">Stop</string>
   <string-array name="rxlogger_intents">
-    <item>RxLogger enable</item>
-    <item>RxLogger disable</item>
-    <item>RxLogger backup file</item>
+    <item>Start RxLogger</item>
+    <item>Stop RxLogger</item>
+    <item>Backup RxLogger logfiles</item>
   </string-array>
 </resources>

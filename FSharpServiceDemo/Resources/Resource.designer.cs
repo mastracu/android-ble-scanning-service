@@ -289,8 +289,8 @@ namespace FSharpServiceDemo
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0b0045
-			public const int BLECapabilities = 2131427397;
+			// aapt resource value: 0x7f0b0046
+			public const int BLECapabilities = 2131427398;
 			
 			// aapt resource value: 0x7f0b000e
 			public const int LowLatencyMode = 2131427342;
@@ -316,8 +316,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b002c
 			public const int actions = 2131427372;
 			
-			// aapt resource value: 0x7f0b0040
-			public const int applyButton = 2131427392;
+			// aapt resource value: 0x7f0b0041
+			public const int applyButton = 2131427393;
 			
 			// aapt resource value: 0x7f0b0038
 			public const int applyButtonNotification = 2131427384;
@@ -343,8 +343,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0033
 			public const int buttonTestNotification = 2131427379;
 			
-			// aapt resource value: 0x7f0b003f
-			public const int cancelButton = 2131427391;
+			// aapt resource value: 0x7f0b0040
+			public const int cancelButton = 2131427392;
 			
 			// aapt resource value: 0x7f0b0037
 			public const int cancelButtonNotification = 2131427383;
@@ -352,17 +352,20 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b001f
 			public const int cancel_action = 2131427359;
 			
+			// aapt resource value: 0x7f0b003e
+			public const int cbObservationsIntents = 2131427390;
+			
 			// aapt resource value: 0x7f0b0027
 			public const int chronometer = 2131427367;
 			
 			// aapt resource value: 0x7f0b000c
 			public const int clear_log_button = 2131427340;
 			
-			// aapt resource value: 0x7f0b0042
-			public const int datawedgeRebuild = 2131427394;
+			// aapt resource value: 0x7f0b0043
+			public const int datawedgeRebuild = 2131427395;
 			
-			// aapt resource value: 0x7f0b003e
-			public const int defaultButton = 2131427390;
+			// aapt resource value: 0x7f0b003f
+			public const int defaultButton = 2131427391;
 			
 			// aapt resource value: 0x7f0b0036
 			public const int defaultButtonNotification = 2131427382;
@@ -373,8 +376,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0035
 			public const int enableNotifications = 2131427381;
 			
-			// aapt resource value: 0x7f0b0044
-			public const int enableRXLogger = 2131427396;
+			// aapt resource value: 0x7f0b0045
+			public const int enableRXLogger = 2131427397;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int end_padder = 2131427374;
@@ -421,8 +424,8 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b000a
 			public const int listView1 = 2131427338;
 			
-			// aapt resource value: 0x7f0b0041
-			public const int logAnalytics = 2131427393;
+			// aapt resource value: 0x7f0b0042
+			public const int logAnalytics = 2131427394;
 			
 			// aapt resource value: 0x7f0b0021
 			public const int media_actions = 2131427361;
@@ -442,17 +445,17 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0023
 			public const int notification_main_column_container = 2131427363;
 			
-			// aapt resource value: 0x7f0b0047
-			public const int notificationsPost = 2131427399;
+			// aapt resource value: 0x7f0b0048
+			public const int notificationsPost = 2131427400;
 			
-			// aapt resource value: 0x7f0b0043
-			public const int printBarcodes = 2131427395;
+			// aapt resource value: 0x7f0b0044
+			public const int printBarcodes = 2131427396;
 			
 			// aapt resource value: 0x7f0b000d
 			public const int radioGroupScanningMode = 2131427341;
 			
-			// aapt resource value: 0x7f0b0046
-			public const int regionTrackingParameters = 2131427398;
+			// aapt resource value: 0x7f0b0047
+			public const int regionTrackingParameters = 2131427399;
 			
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
