@@ -14,10 +14,9 @@
   <string name="notification_text">BLE service is running with parms passed by launching activity</string>
   <string name="restart_blescan">Restart</string>
   <string name="stop_service">Stop</string>
-  <string-array name="region_threshold_array">
-    <item>-87</item>
-    <item>-90</item>
-    <item>-93</item>
-    <item>-96</item>
+  <string-array name="rxlogger_intents">
+    <item>RxLogger enable</item>
+    <item>RxLogger disable</item>
+    <item>RxLogger backup file</item>
   </string-array>
 </resources>

@@ -32,7 +32,7 @@ namespace FSharpServiceDemo
 		{
 			
 			// aapt resource value: 0x7f0c0000
-			public const int region_threshold_array = 2131492864;
+			public const int rxlogger_intents = 2131492864;
 			
 			static Array()
 			{

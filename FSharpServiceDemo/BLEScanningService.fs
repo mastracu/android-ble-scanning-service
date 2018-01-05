@@ -62,12 +62,13 @@ type BleScanningService() =
    let mutable bleScanMode = Unchecked.defaultof<LE.ScanMode>
    let mutable regionTrackingMode = Unchecked.defaultof<Boolean>
    let mutable rssiThreshold = Unchecked.defaultof<int>
-   let updateTimer = new System.Timers.Timer(float 10000)
-   let regionTimeoutTimer = new System.Timers.Timer(float 5000)
    let mutable textToSpeech = Unchecked.defaultof<TextToSpeech>
    let mutable regionAddress = Unchecked.defaultof<Option<string>>
    let mutable regionNotificationEnableBool = false
    let mutable regionNotificationUrlStr = helper.REGION_NOTIFICATION_URL
+
+   let updateTimer = new System.Timers.Timer(float 10000)
+   let regionTimeoutTimer = new System.Timers.Timer(float 5000)
 
    let eventObservation = new Event<BeaconObservation> ()
    let mBLuetoothLeCallback = new UMScanCallback(eventObservation)

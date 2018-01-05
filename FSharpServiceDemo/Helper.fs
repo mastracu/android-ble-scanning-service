@@ -19,7 +19,7 @@ let AsyncSendRegionNotification url jsonData cont1 cont2 =
        async {  try
                     let! completor1 =  Async.StartChild (FSharp.Data.Http.AsyncRequestString (url, 
                                                             headers = [ ContentType Json ], 
-                                                            body = FSharp.Data.TextRequest jsonData), millisecondsTimeout = 4000)
+                                                            body = FSharp.Data.TextRequest jsonData), millisecondsTimeout = 5000)
                     let! result1 = completor1
                     return (cont1 result1)
                 with error -> 

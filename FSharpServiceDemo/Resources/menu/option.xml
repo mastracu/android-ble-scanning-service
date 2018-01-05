@@ -6,7 +6,7 @@
         android:title="Print Beacon Barcode labels"
         android:showAsAction="never" />
   <item android:id="@+id/enableRXLogger"
-        android:title="Enable RXLogger"
+        android:title="RxLogger"
         android:showAsAction="never" />
   <item android:id="@+id/BLECapabilities"
         android:title="BLE Radio capabilities"

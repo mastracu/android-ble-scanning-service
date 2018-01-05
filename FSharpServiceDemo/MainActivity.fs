@@ -353,5 +353,31 @@ type MainActivity () =
 
             do alert.Show()
             true
+        elif item.ItemId = Resources.Id.enableRXLogger then
+            let mutable intentSelectIdx = 0
+            let dialog = 
+                (new AlertDialog.Builder(this))
+                        .SetTitle("Send RxLogger intent")
+                        .SetSingleChoiceItems( Resources.Array.rxlogger_intents, intentSelectIdx, 
+                                new EventHandler<DialogClickEventArgs> (fun s dArgs -> intentSelectIdx <- dArgs.Which) )
+                        .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                        .SetPositiveButton("Apply" , 
+                                new EventHandler<DialogClickEventArgs> (fun s dArgs -> 
+                                let action = match intentSelectIdx with
+                                                | 0 -> "com.symbol.rxlogger.intent.action.ENABLE"
+                                                | 1 -> "com.symbol.rxlogger.intent.action.DISABLE"
+                                                | 2 -> "com.symbol.rxlogger.intent.action.BACKUP_NOW"
+                                                | _ -> ""
+                                use int = new Intent ()
+                                do  int.SetAction action |> ignore
+                                do this.SendBroadcast int
+                                do this.RunOnUiThread( fun() -> 
+                                        use intentToast = 
+                                            (Android.Widget.Toast.MakeText(this, "INTENT SENT: " + action, Android.Widget.ToastLength.Long))
+                                        do intentToast.Show() )                                                                )
+                        )
+                        .Create()
+            do dialog.Show()
+            true
         else
             true
