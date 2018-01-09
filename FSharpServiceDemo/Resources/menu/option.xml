@@ -19,4 +19,7 @@
         android:icon="@drawable/ic_action_send"
         android:title="RegionNotification Settings"
         android:showAsAction="always" />
+  <item android:id="@+id/requestPermissions"
+        android:title="Check App Locationing Permissions"
+        android:showAsAction="never" />
 </menu>

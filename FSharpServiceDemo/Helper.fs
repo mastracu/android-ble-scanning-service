@@ -3,12 +3,25 @@ module helper
 
 open System
 open Android.Content
+open Android.App
+open Android.OS
+open Android.Runtime
+open Android.Views
+open Android.Widget
 open System.Text
 open System.IO
 open System.Net
 open System
 open FSharp.Data.HttpRequestHeaders
 open FSharp.Data.HttpContentTypes
+
+let buildRequestLocationingPermissionsDialog (ctx:Activity) (dialog:AlertDialog.Builder) =
+        dialog.SetMessage("Locationing permissions are currently not granted to the application")
+            .SetPositiveButton("Request Permissions" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> 
+                ctx.RequestPermissions ([|Android.Manifest.Permission.AccessCoarseLocation; 
+                                            Android.Manifest.Permission.AccessFineLocation|], 0)
+                ) )
+            .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
 
 
 //http://fsharp.github.io/FSharp.Data/library/Http.html

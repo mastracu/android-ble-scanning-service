@@ -17,17 +17,16 @@ open helper
 
 type Resources = FSharpServiceDemo.Resource
 
-//TODO: support of MarshMallow and Nougat - currently only supports Lollipop (new run-time permission model see https://gimbal.com/marshmallow-permissions/)
-//https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
+//TODO: support multiple display sizes (convertion to dpi)
 //https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
+//https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
+//https://developer.xamarin.com/guides/android/application_fundamentals/understanding_android_api_levels/
 //TODO: option menu entry to BLE print barcode label for beacon (low priority since all MPACT beacons have one already)
-//TODO: option menu entry to enable RXLogger - see Mark Jolley post on developer.zebra - action = com.symbol.rxlogger.intent.action.ENABLE / DISABLE
 //also com.symbol.rxlogger.intent.action.BACKUP_NOW - build a dialog that also contains a log of the different actions (timestamp and power scan type) - sebd broadcast intents
 //TODO: make HTTP POST notification parameters persistent wth shared preferences 
+//TODO: app crashes on TC20 when trying to build DW configuration.
 //http://fsharp.github.io/FSharp.Data/library/Http.html
-//https://wiki.haskell.org/Simple_Servers
-//https://www.yesodweb.com/blog/2011/01/announcing-warp
-//https://wiki.haskell.org/Web/Servers
+
 
 //Enable BLE option menu entry
 //Run-time request permission option menu entry
@@ -112,6 +111,7 @@ type MainActivity () =
        let rbLowLatencyMode = this.FindViewById<RadioButton>(Resources.Id.LowLatencyMode)
        if rbLowLatencyMode.Checked then "LOWLATENCY"
        else "LOWPOWER"
+
 
     override this.OnCreate (bundle) =
 
@@ -216,6 +216,22 @@ type MainActivity () =
         do filter.AddCategory "android.intent.category.DEFAULT"
         do this.RegisterReceiver (this.barcodeBroadcastReceiver, filter) |> ignore
 
+    override this.OnRequestPermissionsResult (requestcode, permissions, grantRes) =
+        let text = if grantRes.[0] = PM.Permission.Granted then "Permission Granted" else "Permission denied"
+        use permGrantedToast = 
+            (Android.Widget.Toast.MakeText(this, text, Android.Widget.ToastLength.Long))
+        do permGrantedToast.Show() 
+
+    override this.OnResume () =
+        do base.OnResume()
+        let dialog = (new AlertDialog.Builder(this)).SetTitle("Run-time permissions request")
+        if (int Build.VERSION.SdkInt >= 23) then 
+            let permission = Android.Manifest.Permission.AccessFineLocation
+            if this.CheckSelfPermission permission <> PM.Permission.Granted then
+                let dialog2 = buildRequestLocationingPermissionsDialog this dialog
+                do this.RunOnUiThread (fun () -> dialog2.Create()
+                                                        .Show() ) 
+
     override this.OnPause () =
 
         do base.OnPause()
@@ -305,9 +321,9 @@ type MainActivity () =
             do alert.Show()
             true
         elif item.ItemId = Resources.Id.BLECapabilities then
+            use btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
 //https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html 
 //see isMultipleAdvertisementSupported (API21), isOffloadedScanBatchingSupported and isOffloadedFilteringSupported (API 21)
-            use btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
             use ba = btManager.Adapter
             let text = sprintf "MultiAdvertSupport: %s\nScanBatchSupport: %s\nOffloadFilterSupport: %s" 
                             (ba.IsMultipleAdvertisementSupported.ToString()) 
@@ -380,6 +396,22 @@ type MainActivity () =
                                     do intentToast.Show() )))
                         .Create()
             do dialog.Show()
+            true
+        elif item.ItemId = Resources.Id.requestPermissions then
+            let dialog = (new AlertDialog.Builder(this))
+                            .SetTitle("Run-time permissions request")
+            let dialog2 = if (int Build.VERSION.SdkInt >= 23) then 
+                              let permission = Android.Manifest.Permission.AccessFineLocation
+                              if this.CheckSelfPermission permission <> PM.Permission.Granted then
+                                  buildRequestLocationingPermissionsDialog this dialog                              
+                              else
+                                  dialog.SetMessage("Locationing permissions are granted to the application. No action required")
+                                        .SetNeutralButton("OK" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                          else
+                              dialog.SetMessage("No Run-time permissions required below Marshmallow. No action required")
+                                    .SetNeutralButton("OK" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+            do dialog2.Create()
+                      .Show() 
             true
         else
             true

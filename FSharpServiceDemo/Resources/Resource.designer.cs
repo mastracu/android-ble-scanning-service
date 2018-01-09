@@ -460,6 +460,9 @@ namespace FSharpServiceDemo
 			// aapt resource value: 0x7f0b0016
 			public const int region_tracking = 2131427350;
 			
+			// aapt resource value: 0x7f0b0049
+			public const int requestPermissions = 2131427401;
+			
 			// aapt resource value: 0x7f0b002a
 			public const int right_icon = 2131427370;
 			

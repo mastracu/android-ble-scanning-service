@@ -15,3 +15,5 @@
 #r "../../packages/Xamarin.Android.Support.Fragment.26.1.0.1/lib/MonoAndroid80/Xamarin.Android.Support.Fragment.dll"
 #r "../../packages/Xamarin.Android.Support.Media.Compat.26.1.0.1/lib/MonoAndroid80/Xamarin.Android.Support.Media.Compat.dll"
 #r "../../packages/Xamarin.Android.Support.v4.26.1.0.1/lib/MonoAndroid80/Xamarin.Android.Support.v4.dll"
+#r "../../packages/FSharp.Data.2.4.3/lib/portable-net45+netcore45/FSharp.Data.dll"
+#r "../../packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
