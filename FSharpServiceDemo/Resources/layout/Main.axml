@@ -100,20 +100,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="English" />
+            android:text="EN" />
         <RadioButton
             android:id="@+id/es_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Spanish" />
+            android:text="ES" />
         <RadioButton
             android:id="@+id/it_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"
-            android:text="Italian" />
+            android:text="IT" />
+        <RadioButton
+            android:id="@+id/pt_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="PT" />
     </RadioGroup>
     <Button
         android:id="@+id/blescan_logging"

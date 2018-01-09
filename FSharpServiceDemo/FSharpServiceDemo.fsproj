@@ -16,10 +16,10 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
     <Name>FSharpServiceDemo</Name>
-    <SelectedDevice>Zebra Technologies TC20</SelectedDevice>
+    <SelectedDevice>Android_ARMv7a</SelectedDevice>
     <DefaultDevice>Android_ARMv7a</DefaultDevice>
     <AndroidDesignerPreferredDevice>3.7in WVGA (Nexus One)</AndroidDesignerPreferredDevice>
     <NuGetPackageImportStamp>
@@ -37,6 +37,9 @@
     <Tailcalls>False</Tailcalls>
     <PlatformTarget>
     </PlatformTarget>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>PdbOnly</DebugType>

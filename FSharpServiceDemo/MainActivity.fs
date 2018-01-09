@@ -17,7 +17,8 @@ open helper
 
 type Resources = FSharpServiceDemo.Resource
 
-//TODO: support multiple display sizes (convertion to dpi)
+//TODO: support multiple display sizes (convertion to dpi) - tablet 
+//TODO: check bluetooth adapter enable state - move to button
 //https://blog.xamarin.com/requesting-runtime-permissions-in-android-marshmallow/
 //https://developer.xamarin.com/guides/android/application_fundamentals/permissions/
 //https://developer.xamarin.com/guides/android/application_fundamentals/understanding_android_api_levels/
@@ -102,9 +103,11 @@ type MainActivity () =
         let enrbLanguage = this.FindViewById<RadioButton>(Resources.Id.en_language)
         let itrbLanguage = this.FindViewById<RadioButton>(Resources.Id.it_language)
         let esrbLanguage = this.FindViewById<RadioButton>(Resources.Id.es_language)
+        let ptrbLanguage = this.FindViewById<RadioButton>(Resources.Id.pt_language)
 
         if    enrbLanguage.Checked then "EN" 
         elif  itrbLanguage.Checked then "IT"
+        elif  ptrbLanguage.Checked then "PT"
         else  "ES"
 
     member this.selectedScanMode () =
@@ -139,6 +142,7 @@ type MainActivity () =
         let enrbLanguage = this.FindViewById<RadioButton>(Resources.Id.en_language)
         let itrbLanguage = this.FindViewById<RadioButton>(Resources.Id.it_language)
         let esrbLanguage = this.FindViewById<RadioButton>(Resources.Id.es_language)
+        let ptrbLanguage = this.FindViewById<RadioButton>(Resources.Id.pt_language)
         let lowpowerrbScanMode = this.FindViewById<RadioButton>(Resources.Id.LowPowerMode)
         let lowlatencyrbScanMode = this.FindViewById<RadioButton>(Resources.Id.LowLatencyMode)
         do regionTrackingcb <- this.FindViewById<CheckBox>(Resources.Id.region_tracking)
@@ -159,6 +163,7 @@ type MainActivity () =
         do match prefs.GetString ("selected_language", "EN") with
            | "EN" -> enrbLanguage.Checked <- true
            | "ES" -> esrbLanguage.Checked <- true
+           | "PT" -> ptrbLanguage.Checked <- true
            | "IT" -> itrbLanguage.Checked <- true 
            | _ -> ()
 
@@ -231,7 +236,22 @@ type MainActivity () =
                 let dialog2 = buildRequestLocationingPermissionsDialog this dialog
                 do this.RunOnUiThread (fun () -> dialog2.Create()
                                                         .Show() ) 
-
+        let btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
+        let ba = btManager.Adapter
+        if (not ba.IsEnabled) then
+            let dialog = (new AlertDialog.Builder(this))
+                            .SetTitle("BLE adapter is off")
+                            .SetMessage("Service requires ble adapter to be on.")
+                            .SetNegativeButton("Skip" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                            .SetPositiveButton("Turn ble on" , 
+                                    new EventHandler<DialogClickEventArgs> (fun s dArgs -> 
+                                            use int = new Intent ()
+                                            do  int.SetAction BluetoothAdapter.ActionRequestEnable |> ignore
+                                            do this.StartActivity int  ) )
+                            .Create()
+            do dialog.Show() 
+                                         
+        
     override this.OnPause () =
 
         do base.OnPause()
@@ -360,7 +380,7 @@ type MainActivity () =
                                          alert.Dismiss() )
             do testButton.Click.Add (fun dArgs ->
                                          this.RunOnUiThread ( fun () -> testResult.Text <- "Test in progress...")
-                                         let jsonString = serialize "FAKEREGION" "FAKEDEVICE" (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
+                                         let jsonString = serialize "FAKEREGION" Build.Model (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
                                          AsyncSendRegionNotification notificationUrl.Text jsonString 
                                               (fun s -> this.RunOnUiThread(fun () -> testResult.Text <- "Result: PASSED")) 
                                               (fun exn -> this.RunOnUiThread(fun () -> testResult.Text <- "Result: TIMEOUT EXPRIRED"))

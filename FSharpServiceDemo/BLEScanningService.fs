@@ -95,7 +95,7 @@ type BleScanningService() =
                         do regionTimeoutTimer.Start()
                         
                         if regionNotificationEnableBool then
-                            let jsonString = helper.serialize bo.BeaconAddress "TC8000UM" bo.ObservationTimestamp EnterRegion
+                            let jsonString = helper.serialize bo.BeaconAddress Build.Model bo.ObservationTimestamp EnterRegion
                             AsyncSendRegionNotification regionNotificationUrlStr jsonString 
                                (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 
                                (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message) |> ignore)
@@ -112,9 +112,13 @@ type BleScanningService() =
                            elif localeForSpeech = Java.Util.Locale.Uk then
                               do textToSpeech.Speak ("Region " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
                                    string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
-                           else
+                           else if localeForSpeech.Country = "PT" then 
                               do textToSpeech.Speak ("Región " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
                                    string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
+                           else
+                              do textToSpeech.Speak ("-	Região " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
+                                   string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
+
                 match regionAddress with
                 | None -> 
                         enterRegionifAboveThreshold ()
@@ -278,6 +282,10 @@ type BleScanningService() =
                do textToSpeech.Speak (" Maximum signal " + topRssiInPeriod.ToString()+ " from beacon " +
                                    string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 2] + " " +
                                    string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
+            elif localeForSpeech.Country = "PT" then
+               do textToSpeech.Speak (" Sinal Máximo " + topRssiInPeriod.ToString()+ " do endereço " +
+                                   string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 2] + " " +
+                                   string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
             else
                do textToSpeech.Speak (" Nivel máximo de señal " + topRssiInPeriod.ToString()+ " desde posición " +
                                    string topRssiBeaconInPeriod.[topRssiBeaconInPeriod.Length - 2] + " " +
@@ -285,8 +293,9 @@ type BleScanningService() =
          else
             do textToSpeech.Speak ((ObservationsCountInPeriod.ToString() +
                                        if    localeForSpeech = Java.Util.Locale.Italy then " rilevazioni da " +  beaconCountInPeriod.ToString() + "indirizzi"
-                                       elif  localeForSpeech = Java.Util.Locale.Uk    then " advertisements from " +  beaconCountInPeriod.ToString() + "beacons"
-                                       else " señales desde " + beaconCountInPeriod.ToString() + "balizas")
+                                       elif  localeForSpeech = Java.Util.Locale.Uk    then " advertisements from " +  beaconCountInPeriod.ToString() + " beacons"
+                                       else if localeForSpeech.Country = "PT" then " Anuncios de " + beaconCountInPeriod.ToString() + " endereços" else
+                                          " señales desde " + beaconCountInPeriod.ToString() + " balizas")
                  , QueueMode.Add, param, "UniqueID") |> ignore
       else
          ()
@@ -306,7 +315,7 @@ type BleScanningService() =
             do this.RefreshNotification()
 
             if regionNotificationEnableBool then
-                let jsonString = helper.serialize add "TC8000UM" (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
+                let jsonString = helper.serialize add Build.Model (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
                 AsyncSendRegionNotification regionNotificationUrlStr jsonString 
                     (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 
                     (fun exn -> Log.Debug ("AsyncSendRegionNotification", exn.Message) |> ignore)
@@ -320,8 +329,11 @@ type BleScanningService() =
                 elif localeForSpeech = Java.Util.Locale.Uk then
                     do textToSpeech.Speak ("Exit region " + string add.[add.Length - 2] + " " +
                         string add.[add.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
-                else
+                else if localeForSpeech.Country = "ES" then 
                     do textToSpeech.Speak ("Salida región " + string add.[add.Length - 2] + " " +
+                        string add.[add.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
+                else
+                    do textToSpeech.Speak ("Saída da Região " + string add.[add.Length - 2] + " " +
                         string add.[add.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
 
    override this.OnCreate () =
@@ -348,6 +360,7 @@ type BleScanningService() =
                do localeForSpeech <- match intent.GetStringExtra (helper.EXTRA_SERVICE_LANGUAGE) with
                                         | "IT" ->  Java.Util.Locale.Italy
                                         | "ES" ->  new Java.Util.Locale ("es", "ES")
+                                        | "PT" ->  new Java.Util.Locale ("pt", "PT")
                                         | _ -> Java.Util.Locale.Uk
                do beacon2Observe <- Seq.cast (intent.GetStringArrayListExtra (helper.EXTRA_SERVICE_FILTER))
                do bleScanMode <- match intent.GetStringExtra (helper.EXTRA_SERVICE_SCANMODE) with
