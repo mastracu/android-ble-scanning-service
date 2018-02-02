@@ -11,6 +11,7 @@ open Android.Views
 open Android.Widget
 open Android.Preferences
 open Android.Bluetooth
+open Android.Util
 
 open helper
 
@@ -236,20 +237,22 @@ type MainActivity () =
                 let dialog2 = buildRequestLocationingPermissionsDialog this dialog
                 do this.RunOnUiThread (fun () -> dialog2.Create()
                                                         .Show() ) 
+
         let btManager = Application.Context.GetSystemService(Context.BluetoothService) :?> BluetoothManager
         let ba = btManager.Adapter
         if (not ba.IsEnabled) then
-            let dialog = (new AlertDialog.Builder(this))
-                            .SetTitle("BLE adapter is off")
-                            .SetMessage("Service requires ble adapter to be on.")
-                            .SetNegativeButton("Skip" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
-                            .SetPositiveButton("Turn ble on" , 
-                                    new EventHandler<DialogClickEventArgs> (fun s dArgs -> 
-                                            use int = new Intent ()
-                                            do  int.SetAction BluetoothAdapter.ActionRequestEnable |> ignore
-                                            do this.StartActivity int  ) )
-                            .Create()
-            do dialog.Show() 
+            let alDialogBuild = (new AlertDialog.Builder(this))
+                                            .SetTitle("BLE adapter is off")
+                                            .SetMessage("Service requires ble adapter to be on.")
+                                            .SetNegativeButton("Skip" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
+                                            .SetPositiveButton("Turn ble on" , 
+                                                    new EventHandler<DialogClickEventArgs> (fun s dArgs -> 
+                                                            use int = new Intent ()
+                                                            do  int.SetAction BluetoothAdapter.ActionRequestEnable |> ignore
+                                                            do this.StartActivity int  
+                                                        ) )
+                                            .Create()
+            do alDialogBuild.Show() 
                                          
         
     override this.OnPause () =
@@ -287,21 +290,11 @@ type MainActivity () =
                         .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
                         .SetPositiveButton("Apply" , new EventHandler<DialogClickEventArgs> 
                                 (fun s dArgs -> 
-                                    // http://techdocs.zebra.com/datawedge/6-5/guide/settings/
-                                    let Asset2DWAutoImport filename =
-                                        let path = "/enterprise/device/settings/datawedge/autoimport/"
-                                        let assets = this.Assets
-                                        let fromStream = assets.Open filename
-                                        // I create the file - RW for owner only, not visibile to DW
-                                        let toFileStream = File.Create (path + filename)
-                                        do fromStream.CopyTo toFileStream
-                                        do toFileStream.Close ()
-                                        do fromStream.Close ()
-                                        // once it is copied, I give RW access to everyone in order for DW to process it and then remove it.  
-                                        let javaFile =  new Java.IO.File (path + filename)
-                                        do javaFile.SetWritable (true,false) |> ignore
-                                        do javaFile.SetReadable (true,false) |> ignore
-                                    do Asset2DWAutoImport "dwprofile_Bleservice.db" )
+                                    do try Asset2DWAutoImport  "dwprofile_Bleservice.db" "/enterprise/device/settings/datawedge/autoimport/" this  
+                                       with | :? System.Exception as exn -> 
+                                                   let errToast = Android.Widget.Toast.MakeText(this, exn.Message, Android.Widget.ToastLength.Long)
+                                                   do errToast.Show()
+                                    )
                               )
                         .Create()
             do dialog.Show()

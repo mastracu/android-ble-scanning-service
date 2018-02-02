@@ -112,11 +112,11 @@ type BleScanningService() =
                            elif localeForSpeech = Java.Util.Locale.Uk then
                               do textToSpeech.Speak ("Region " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
                                    string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore
-                           else if localeForSpeech.Country = "PT" then 
+                           else if localeForSpeech.Country = "ES" then 
                               do textToSpeech.Speak ("Región " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
                                    string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
                            else
-                              do textToSpeech.Speak ("-	Região " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
+                              do textToSpeech.Speak ("Região " + string bo.BeaconAddress.[bo.BeaconAddress.Length - 2] + " " +
                                    string bo.BeaconAddress.[bo.BeaconAddress.Length - 1], QueueMode.Add, param, "UniqueID") |> ignore                                                         
 
                 match regionAddress with
@@ -294,7 +294,7 @@ type BleScanningService() =
             do textToSpeech.Speak ((ObservationsCountInPeriod.ToString() +
                                        if    localeForSpeech = Java.Util.Locale.Italy then " rilevazioni da " +  beaconCountInPeriod.ToString() + "indirizzi"
                                        elif  localeForSpeech = Java.Util.Locale.Uk    then " advertisements from " +  beaconCountInPeriod.ToString() + " beacons"
-                                       else if localeForSpeech.Country = "PT" then " Anuncios de " + beaconCountInPeriod.ToString() + " endereços" else
+                                       else if localeForSpeech.Country = "PT" then " anuncios de " + beaconCountInPeriod.ToString() + " endereços" else
                                           " señales desde " + beaconCountInPeriod.ToString() + " balizas")
                  , QueueMode.Add, param, "UniqueID") |> ignore
       else

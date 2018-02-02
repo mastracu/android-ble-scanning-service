@@ -23,6 +23,20 @@ let buildRequestLocationingPermissionsDialog (ctx:Activity) (dialog:AlertDialog.
                 ) )
             .SetNegativeButton("Cancel" , new EventHandler<DialogClickEventArgs> (fun s dArgs -> ()) )
 
+// http://techdocs.zebra.com/datawedge/6-5/guide/settings/
+let Asset2DWAutoImport  filename path (context:Context) =
+    let fromStream = context.Assets.Open filename
+    let toFileStream =  File.Create (path + filename)
+    // I create the file - RW for owner only, not visibile to DW
+    do fromStream.CopyTo toFileStream
+    do toFileStream.Close ()
+    do fromStream.Close ()
+    // once it is copied, I give RW access to everyone in order for DW to process it and then remove it.  
+    // let javaFile =  new Java.IO.FileOutputStream (path + filename)
+    let javaFile = new Java.IO.File (path + filename)
+    do javaFile.SetWritable (true,false) |> ignore
+    do javaFile.SetReadable (true,false) |> ignore
+
 
 //http://fsharp.github.io/FSharp.Data/library/Http.html
 //data sent in JSON format
