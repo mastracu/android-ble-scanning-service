@@ -18,10 +18,12 @@ type Resources = FSharpServiceDemo.Resource
 // TODO: create notifications if ble is disabled / adapter unavailale / missing run-time permission and then destroys service-
 // TODO: create notification if service is unable to deliver region notification via http.
 // TODO: create workaround for 30 minute BLE SCAN timeout in Nougat 
+// TODO: implication of transition to jobs in OREO
 
 
 type UMScanCallback (e: Event<BeaconObservation>) =
    inherit LE.ScanCallback ()
+   
    let reportResult (sResult:LE.ScanResult) = 
       let newObservation:BeaconObservation = 
          { ObservationTimestamp = Java.Lang.JavaSystem.CurrentTimeMillis(); BeaconAddress = sResult.Device.Address 
@@ -95,6 +97,7 @@ type BleScanningService() =
                         do regionTimeoutTimer.Start()
                         
                         if regionNotificationEnableBool then
+                        //TODO: critical is to retrieve ESN and pass it over as one string joined with Build.Model.  Build.Serial throws an exception
                             let jsonString = helper.serialize bo.BeaconAddress Build.Model bo.ObservationTimestamp EnterRegion
                             AsyncSendRegionNotification regionNotificationUrlStr jsonString 
                                (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 
@@ -315,6 +318,7 @@ type BleScanningService() =
             do this.RefreshNotification()
 
             if regionNotificationEnableBool then
+                //TODO: critical is to retrieve ESN and pass it over as one string joined with Build.Model.  Build.Serial throws an exception
                 let jsonString = helper.serialize add Build.Model (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
                 AsyncSendRegionNotification regionNotificationUrlStr jsonString 
                     (fun s -> Log.Debug ("AsyncSendRegionNotification", s) |> ignore) 

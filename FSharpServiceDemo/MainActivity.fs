@@ -373,6 +373,8 @@ type MainActivity () =
                                          alert.Dismiss() )
             do testButton.Click.Add (fun dArgs ->
                                          this.RunOnUiThread ( fun () -> testResult.Text <- "Test in progress...")
+                                         //TODO: critical is to retrieve ESN and pass it over as one string joined with Build.Model.  Build.Serial throws an exception
+
                                          let jsonString = serialize "FAKEREGION" Build.Model (Java.Lang.JavaSystem.CurrentTimeMillis()) ExitRegion
                                          AsyncSendRegionNotification notificationUrl.Text jsonString 
                                               (fun s -> this.RunOnUiThread(fun () -> testResult.Text <- "Result: PASSED")) 
