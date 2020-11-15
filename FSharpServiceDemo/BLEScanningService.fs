@@ -1,4 +1,4 @@
-﻿namespace BleScanningService
+namespace BleScanningService
 
 open System
 open Android.App
@@ -240,22 +240,32 @@ type BleScanningService() =
                                                         countPendingIntent)
       builder.Build()
 
+   member this.CreateNotificationChannel() =      
+      if (Build.VERSION.SdkInt>=Android.OS.BuildVersionCodes.O) then
+        let defNotChan = new NotificationChannel ("default", "default", NotificationImportance.High )
+        use notificationManager = this.GetSystemService(Context.NotificationService) :?> NotificationManager
+        do notificationManager.CreateNotificationChannel defNotChan
+      else
+        ()
+
    member this.BuildNotification notificationAction1 notificationAction2 =
       do this.notificationBuilder.MActions.Clear()
       this.notificationBuilder
          .AddAction(notificationAction1)
          .AddAction(notificationAction2)
+         .SetChannelId("default")
          .Build()
 
    member this.RefreshNotification () =
        use notification = this.BuildNotification notificationAction1 notificationAction2
-       use notificationManager = this.GetSystemService(Context.NotificationService) :?> NotificationManager 
+       use notificationManager = this.GetSystemService(Context.NotificationService) :?> NotificationManager
        do notificationManager.Notify (helper.SERVICE_RUNNING_NOTIFICATION_ID,notification)      
       
 
    member this.RegisterForegroundService (showRssiCountSwitch:Boolean) =
       notificationAction1 <- this.BuildStopServiceAction
       notificationAction2 <- if showRssiCountSwitch then this.BuildRssiBlescanAction else this.BuildMuteBlescanAction
+      this.CreateNotificationChannel()
       let notification = this.BuildNotification notificationAction1 notificationAction2
       do this.StartForeground (helper.SERVICE_RUNNING_NOTIFICATION_ID,notification)
 

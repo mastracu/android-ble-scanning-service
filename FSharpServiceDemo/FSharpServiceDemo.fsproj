@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>FSharpServiceDemo</RootNamespace>
     <AssemblyName>FSharpServiceDemo</AssemblyName>
-    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -19,11 +19,12 @@
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
     <Name>FSharpServiceDemo</Name>
-    <SelectedDevice>Android_ARMv7a</SelectedDevice>
-    <DefaultDevice>Android_ARMv7a</DefaultDevice>
+    <SelectedDevice>Android_Accelerated_x86_Oreo</SelectedDevice>
+    <DefaultDevice>Android_Accelerated_x86_Oreo</DefaultDevice>
     <AndroidDesignerPreferredDevice>3.7in WVGA (Nexus One)</AndroidDesignerPreferredDevice>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <FSharpTargetsPath>C:\Users\vhrd47\AppData\Local\Microsoft\VisualStudio\15.0_a4d2c22b\Extensions\smge2x41.o5f\Microsoft.FSharp.targets</FSharpTargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -56,6 +57,9 @@
     </DefineConstants>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <GenerateTailCalls>true</GenerateTailCalls>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.FSharp.targets" />
   <ItemGroup>
@@ -114,7 +118,7 @@
     <AndroidAsset Include="Assets\AboutAssets.txt" />
     <AndroidAsset Include="Assets\dwprofile_Bleservice.db" />
     <None Include="GettingStarted.Xamarin" />
-    <Content Include="packages.config" />
+    <None Include="packages.config" />
     <None Include="Scripts\load-references-debug.fsx" />
     <None Include="Scripts\load-project-debug.fsx" />
     <None Include="Scripts\load-references-release.fsx" />
